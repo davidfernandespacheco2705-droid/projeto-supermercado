@@ -1,0 +1,12 @@
+<%- include("../partials/header") %>
+
+<h2>Novo Produto</h2>
+
+<form action="/produtos" method="POST">
+  <input type="text" name="nome" placeholder="Nome" required>
+  <input type="number" name="preco" placeholder="Preço" step="0.01" required>
+  <input type="number" name="stock" placeholder="Stock" required>
+  <button type="submit">Criar</button>
+</form>
+
+<%- include("../partials/footer") %>
