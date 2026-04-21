@@ -1,0 +1,78 @@
+/* CORPO DA PÁGINA */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+/* CONTAINER CENTRAL */
+.container {
+  width: 80%;
+  margin: auto;
+  margin-top: 20px;
+}
+
+/* TÍTULOS */
+h2 {
+  color: #333;
+}
+
+/* LINKS */
+a {
+  text-decoration: none;
+  color: #007bff;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* TABELAS */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+table th, table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+table th {
+  background-color: #007bff;
+  color: white;
+}
+
+/* BOTÕES */
+button {
+  padding: 5px 10px;
+  border: none;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+/* FORMULÁRIOS */
+input, select {
+  padding: 8px;
+  margin: 5px 0;
+  width: 100%;
+}
+
+/* NAVBAR SIMPLES */
+.navbar {
+  background-color: #333;
+  padding: 10px;
+}
+
+.navbar a {
+  color: white;
+  margin-right: 15px;
+}

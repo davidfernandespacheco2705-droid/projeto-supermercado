@@ -1,0 +1,22 @@
+<%- include("../layout/header") %>
+
+<h2>Nova Venda</h2>
+
+<form action="/vendas" method="POST">
+  <h3>Cliente</h3>
+  <input type="text" name="cliente_nome" placeholder="Nome do cliente" required>
+  <input type="email" name="cliente_email" placeholder="Email do cliente" required>
+
+  <hr>
+
+  <% produtos.forEach(produto => { %>
+    <div>
+      <label><%= produto.nome %> (€<%= produto.preco %>)</label>
+      <input type="number" name="quantidades[<%= produto._id %>]" min="0" value="0">
+    </div>
+  <% }) %>
+
+  <button type="submit">Finalizar Venda</button>
+</form>
+
+<%- include("../layout/footer") %>

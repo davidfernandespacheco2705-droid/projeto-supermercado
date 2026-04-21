@@ -1,0 +1,34 @@
+<%- include("../layout/header") %>
+
+<h2>Histórico de Vendas</h2>
+
+<table border="1">
+  <tr>
+    <th>Cliente</th>
+    <th>Produtos</th>
+    <th>Total</th>
+    <th>Data</th>
+  </tr>
+
+  <% vendas.forEach(venda => { %>
+    <tr>
+      <td><%= venda.cliente ? venda.cliente.nome : "Sem cliente" %></td>
+
+      <td>
+        <ul>
+          <% venda.produtos.forEach(item => { %>
+            <li>
+              <%= item.produto ? item.produto.nome : "Produto removido" %>
+              x <%= item.quantidade %>
+            </li>
+          <% }) %>
+        </ul>
+      </td>
+
+      <td>€<%= venda.total.toFixed(2) %></td>
+      <td><%= new Date(venda.data).toLocaleString() %></td>
+    </tr>
+  <% }) %>
+</table>
+
+<%- include("../layout/footer") %>

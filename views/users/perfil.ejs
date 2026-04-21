@@ -1,0 +1,48 @@
+<%- include("../layout/header") %>
+
+<h2>Perfil</h2>
+
+<p><strong>Nome:</strong> <%= user.nome %></p>
+<p><strong>Username:</strong> <%= user.username %></p>
+<p><strong>Email:</strong> <%= user.email %></p>
+<p><strong>Morada:</strong> <%= user.morada %></p>
+<p><strong>Telefone:</strong> <%= user.telefone %></p>
+<p><strong>Role:</strong> <%= user.role %></p>
+
+<% if (user.role === "admin") { %>
+  <h3>Supermercados por aprovar</h3>
+
+  <% if (supermercadosPendentes.length > 0) { %>
+    <% supermercadosPendentes.forEach(s => { %>
+      <p><%= s.nome %></p>
+
+      <form action="/supermercados/<%= s._id %>/aprovar" method="POST">
+        <button type="submit">Aprovar</button>
+      </form>
+    <% }) %>
+  <% } else { %>
+    <p>Não existem supermercados por aprovar.</p>
+  <% } %>
+<% } %>
+
+<% if (user.role === "cliente") { %>
+  <h3>Histórico de compras</h3>
+  <% vendas.forEach(venda => { %>
+    <p>Total: €<%= venda.total %></p>
+  <% }) %>
+<% } %>
+
+<% if (user.role === "supermercado") { %>
+  <h3>Produtos</h3>
+  <% produtos.forEach(produto => { %>
+    <p><%= produto.nome %></p>
+  <% }) %>
+<% } %>
+
+<% if (user.role === "estafeta") { %>
+  <h3>Área do estafeta</h3>
+  <p>Aqui podes mostrar entregas futuras.</p>
+<% } %>
+
+
+<%- include("../layout/footer") %>

@@ -1,0 +1,51 @@
+<%- include("../layout/header") %>
+
+<h2>Editar Supermercado</h2>
+
+<form action="/supermercados/<%= supermercado._id %>/editar" method="POST">
+  <div>
+    <label>Nome</label><br>
+    <input type="text" name="nome" value="<%= supermercado.nome %>" required>
+  </div>
+
+  <br>
+
+  <div>
+    <label>Descrição</label><br>
+    <input type="text" name="descricao" value="<%= supermercado.descricao %>" required>
+  </div>
+
+  <br>
+
+  <div>
+    <label>Localização</label><br>
+    <input type="text" name="localizacao" value="<%= supermercado.localizacao %>" required>
+  </div>
+
+  <br>
+
+  <div>
+    <label>Horário</label><br>
+    <input type="text" name="horario" value="<%= supermercado.horario %>" required>
+  </div>
+
+  <br>
+
+  <div>
+    <label>Método de Entrega</label><br>
+    <input type="text" name="metodoEntrega" value="<%= supermercado.metodoEntrega %>" required>
+  </div>
+
+  <br>
+
+  <div>
+    <label>Custo de Entrega</label><br>
+    <input type="number" step="0.01" name="custoEntrega" value="<%= supermercado.custoEntrega %>" required>
+  </div>
+
+  <br>
+
+  <button type="submit">Guardar Alterações</button>
+</form>
+
+<%- include("../layout/footer") %>

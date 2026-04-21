@@ -1,13 +1,46 @@
-<%- include("../partials/header") %>
+<%- include("../layout/header") %>
 
 <h2>Lista de Produtos</h2>
 
+<form method="GET" action="/produtos">
+  <input type="text" name="pesquisa" placeholder="Pesquisar produto..." value="<%= pesquisa || '' %>">
+  <button type="submit">Pesquisar</button>
+</form>
+
 <a href="/produtos/novo">Novo Produto</a>
 
-<ul>
-  <% produtos.forEach(produto => { %>
-    <li><%= produto.nome %> - €<%= produto.preco %></li>
-  <% }) %>
-</ul>
+<table border="1">
+  <tr>
+    <th>Nome</th>
+    <th>Descrição</th>
+    <th>Categoria</th>
+    <th>Preço</th>
+    <th>Imagem</th>
+    <th>Stock</th>
+    <th>Supermercado</th>
+    <th>Ações</th>
+  </tr>
 
-<%- include("../partials/footer") %>
+  <% produtos.forEach(produto => { %>
+    <tr>
+      <td><%= produto.nome %></td>
+      <td><%= produto.descricao %></td>
+      <td><%= produto.categoria %></td>
+      <td>€<%= produto.preco %></td>
+      <td>
+        <img src="<%= produto.imagem %>" alt="produto" width="60">
+      </td>
+      <td><%= produto.stock %></td>
+      <td><%= produto.supermercado ? produto.supermercado.nome : "Sem supermercado" %></td>
+      <td>
+        <a href="/produtos/<%= produto._id %>/editar">Editar</a>
+
+        <form action="/produtos/<%= produto._id %>/apagar" method="POST" style="display:inline;">
+          <button type="submit">Apagar</button>
+        </form>
+      </td>
+    </tr>
+  <% }) %>
+</table>
+
+<%- include("../layout/footer") %>

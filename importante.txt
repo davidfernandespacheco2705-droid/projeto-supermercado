@@ -1,0 +1,47 @@
+Lógica do projeto
+
+
+FEITO: 
+- Gestão de supermercados
+- Gestão de produtos
+- CSS básico
+
+
+FALTA: 
+
+-- REGISTO --
+Aprimorar o login
+Perfis de utilizador com informações pessoais e histórico de encomendas
+Perfis de admins, para poderem validar supermercados
+
+-- STOCK --
+Meter o stock direito, tá a descontar no stock existente mas vende mesmo havendo 0 stock e o stock fica negativo
+
+-- DASHBOARD --
+Usar uma framework de css, BOOTSTRAP, de preferência open source para podermos por do nosso agrado
+
+
+
+
+
+
+MODELS -> esquema da base de dados
+Dados existentes e como são guardados
+
+ - Produto.js
+ - Supermercado.js
+ - User.js
+ - Venda.js
+
+ VIEWS -> Páginas de interface que o utilizador vê | EJS
+ ─ produtos
+ ─ supermercados
+ ─ vendas
+ ─ users
+ ─ partials -> footer e header usados em várias páginas
+
+ APP.JS 
+ - Rotas
+ - Lógica do programa
+ - Ligação ao MongoDB
+

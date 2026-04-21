@@ -1,0 +1,23 @@
+<%- include("../layout/header") %>
+
+<h2>Novo Utilizador</h2>
+
+<form action="/users" method="POST">
+  <input type="text" name="nome" placeholder="Nome" required>
+  <input type="text" name="username" placeholder="Username" required>
+  <input type="email" name="email" placeholder="Email" required>
+  <input type="password" name="password" placeholder="Password" required>
+  <input type="text" name="morada" placeholder="Morada" required>
+  <input type="text" name="telefone" placeholder="Telefone" required>
+
+  <select name="role" required>
+    <option value="cliente">Cliente</option>
+    <option value="supermercado">Supermercado</option>
+    <option value="estafeta">Estafeta</option>
+    <option value="admin">Admin</option>
+  </select>
+
+  <button type="submit">Guardar</button>
+</form>
+
+<%- include("../layout/footer") %>

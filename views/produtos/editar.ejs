@@ -1,0 +1,24 @@
+<%- include("../layout/header") %>
+
+<h2>Editar Produto</h2>
+
+<form action="/produtos/<%= produto._id %>/editar" method="POST">
+  <input type="text" name="nome" value="<%= produto.nome %>" required>
+  <input type="text" name="descricao" value="<%= produto.descricao %>" required>
+  <input type="text" name="categoria" value="<%= produto.categoria %>" required>
+  <input type="number" step="0.01" name="preco" value="<%= produto.preco %>" required>
+  <input type="text" name="imagem" value="<%= produto.imagem %>" required>
+  <input type="number" name="stock" value="<%= produto.stock %>" required>
+
+  <select name="supermercado" required>
+    <% supermercados.forEach(s => { %>
+      <option value="<%= s._id %>" <%= produto.supermercado && produto.supermercado.toString() === s._id.toString() ? "selected" : "" %>>
+        <%= s.nome %>
+      </option>
+    <% }) %>
+  </select>
+
+  <button type="submit">Guardar Alterações</button>
+</form>
+
+<%- include("../layout/footer") %>

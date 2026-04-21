@@ -1,0 +1,45 @@
+<%- include("../layout/header") %>
+
+<h2>Lista de Supermercados</h2>
+
+<a href="/supermercados/novo">Novo Supermercado</a>
+
+<table border="1">
+  <tr>
+    <th>Nome</th>
+    <th>Descrição</th>
+    <th>Localização</th>
+    <th>Horário</th>
+    <th>Método Entrega</th>
+    <th>Custo Entrega</th>
+    <th>Aprovado</th>
+    <th>Ações</th>
+  </tr>
+
+  <% supermercados.forEach(supermercado => { %>
+    <tr>
+      <td><%= supermercado.nome %></td>
+      <td><%= supermercado.descricao %></td>
+      <td><%= supermercado.localizacao %></td>
+      <td><%= supermercado.horario %></td>
+      <td><%= supermercado.metodoEntrega %></td>
+      <td>€<%= supermercado.custoEntrega %></td>
+      <td><%= supermercado.aprovado ? "Sim" : "Não" %></td>
+      <td>
+        <a href="/supermercados/<%= supermercado._id %>/editar">Editar</a>
+
+        <form action="/supermercados/<%= supermercado._id %>/apagar" method="POST" style="display:inline;">
+          <button type="submit">Apagar</button>
+        </form>
+
+        <% if (!supermercado.aprovado) { %>
+          <form action="/supermercados/<%= supermercado._id %>/aprovar" method="POST" style="display:inline;">
+            <button type="submit">Aprovar</button>
+          </form>
+        <% } %>
+      </td>
+    </tr>
+  <% }) %>
+</table>
+
+<%- include("../layout/footer") %>
