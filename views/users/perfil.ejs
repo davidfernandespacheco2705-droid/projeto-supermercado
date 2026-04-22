@@ -33,12 +33,22 @@
 <% } %>
 
 <% if (user.role === "supermercado") { %>
-  <h3>Produtos</h3>
-  <% produtos.forEach(produto => { %>
-    <p><%= produto.nome %></p>
-  <% }) %>
-<% } %>
+  <h3>Produtos do supermercado</h3>
 
+  <% if (produtos.length > 0) { %>
+    <% produtos.forEach(produto => { %>
+      <div>
+        <p><strong>Nome:</strong> <%= produto.nome %></p>
+        <p><strong>Categoria:</strong> <%= produto.categoria %></p>
+        <p><strong>Preço:</strong> €<%= produto.preco %></p>
+        <p><strong>Stock:</strong> <%= produto.stock %></p>
+      </div>
+      <hr>
+    <% }) %>
+  <% } else { %>
+    <p>Não existem produtos registados para este supermercado.</p>
+  <% } %>
+<% } %>
 <% if (user.role === "estafeta") { %>
   <h3>Área do estafeta</h3>
   <p>Aqui podes mostrar entregas futuras.</p>

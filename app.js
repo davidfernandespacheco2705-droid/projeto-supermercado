@@ -121,6 +121,21 @@ app.post("/produtos/:id/apagar", async (req, res) => {
   res.redirect("/produtos");
 });
 
+// COMPARAr PREÇOS DE UM PRODUTO
+app.get("/comparar", async (req, res) => {
+  const pesquisa = req.query.pesquisa || "";
+
+  let produtos = [];
+
+  if (pesquisa) {
+    produtos = await Produto.find({
+      nome: { $regex: pesquisa, $options: "i" }
+    }).populate("supermercado");
+  }
+
+  res.render("produtos/comparar", { produtos, pesquisa });
+});
+
 // ==================== SUPERMERCADOS ====================
 
 // LISTA SUPERMERCADOS
@@ -145,7 +160,8 @@ app.post("/supermercados", async (req, res) => {
     horario,
     metodoEntrega,
     custoEntrega,
-    aprovado: false
+    aprovado: false,
+    user: req.session.user._id // LIGA AO USER
   });
 
   await novoSupermercado.save();
@@ -242,7 +258,7 @@ app.post("/login", async (req, res) => {
   res.redirect("/perfil");
 });
 
-// MOSTRA O PERFIL
+//MOSTRA O PERFIL 
 app.get("/perfil", auth, async (req, res) => {
   const user = await User.findById(req.session.user._id);
 
@@ -264,7 +280,7 @@ app.get("/perfil", auth, async (req, res) => {
     if (supermercadoDoUser) {
       produtos = await Produto.find({
         supermercado: supermercadoDoUser._id
-      }).populate("supermercado");
+      });
     }
   }
 
