@@ -1,0 +1,14 @@
+<%- include("../layout/header") %>
+
+<h2>Editar Categoria</h2>
+
+<form action="/admin/categorias/<%= categoria._id %>/editar" method="POST">
+  <input type="text" name="nome" value="<%= categoria.nome %>" required>
+  <button type="submit">Guardar</button>
+</form>
+
+<a href="/admin/categorias">
+  <button type="button">Voltar</button>
+</a>
+
+<%- include("../layout/footer") %>

@@ -3,36 +3,40 @@
 <h2>Comparar Preços</h2>
 
 <form method="GET" action="/comparar">
-  <input type="text" name="pesquisa" placeholder="Nome do produto..." value="<%= pesquisa || '' %>">
+  <input type="text" name="pesquisa" placeholder="Pesquisar produto..." value="<%= pesquisa || '' %>">
   <button type="submit">Pesquisar</button>
 </form>
 
-<% if (pesquisa) { %>
-  <h3>Resultados para: <%= pesquisa %></h3>
+<% if (produtos.length > 0) { %>
+  <h3>Resultados</h3>
 
-  <% if (produtos.length > 0) { %>
-    <table border="1">
+  <table border="1">
+    <tr>
+      <th>Nome</th>
+      <th>Categoria</th>
+      <th>Preço</th>
+      <th>Supermercado</th>
+      <th>Destaque</th>
+    </tr>
+
+    <% produtos.forEach((produto, index) => { %>
       <tr>
-        <th>Nome</th>
-        <th>Categoria</th>
-        <th>Preço</th>
-        <th>Stock</th>
-        <th>Supermercado</th>
+        <td><%= produto.nome %></td>
+        <td><%= produto.categoria ? produto.categoria.nome : "Sem categoria" %></td>
+        <td>€<%= produto.preco %></td>
+        <td><%= produto.supermercado ? produto.supermercado.nome : "Sem supermercado" %></td>
+        <td>
+          <% if (index === 0) { %>
+            Mais barato
+          <% } else { %>
+            -
+          <% } %>
+        </td>
       </tr>
-
-      <% produtos.forEach(produto => { %>
-        <tr>
-          <td><%= produto.nome %></td>
-          <td><%= produto.categoria %></td>
-          <td>€<%= produto.preco %></td>
-          <td><%= produto.stock %></td>
-          <td><%= produto.supermercado ? produto.supermercado.nome : "Sem supermercado" %></td>
-        </tr>
-      <% }) %>
-    </table>
-  <% } else { %>
-    <p>Não foram encontrados produtos com esse nome.</p>
-  <% } %>
+    <% }) %>
+  </table>
+<% } else if (pesquisa) { %>
+  <p>Não foram encontrados produtos com esse nome.</p>
 <% } %>
 
 <%- include("../layout/footer") %>

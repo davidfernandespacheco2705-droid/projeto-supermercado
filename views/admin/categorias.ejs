@@ -1,0 +1,34 @@
+<%- include("../layout/header") %>
+
+<h2>Gestão de Categorias</h2>
+
+<a href="/admin/categorias/nova">
+  <button type="button">Nova Categoria</button>
+</a>
+
+<br><br>
+
+<% if (categorias.length > 0) { %>
+  <% categorias.forEach(categoria => { %>
+    <div>
+      <p><strong>Nome:</strong> <%= categoria.nome %></p>
+
+      <a href="/admin/categorias/<%= categoria._id %>/editar">
+        <button type="button">Editar</button>
+      </a>
+
+      <form action="/admin/categorias/<%= categoria._id %>/apagar" method="POST" style="display:inline;">
+        <button type="submit">Apagar</button>
+      </form>
+    </div>
+    <hr>
+  <% }) %>
+<% } else { %>
+  <p>Não existem categorias criadas.</p>
+<% } %>
+
+<a href="/admin/dashboard">
+  <button type="button">Voltar</button>
+</a>
+
+<%- include("../layout/footer") %>

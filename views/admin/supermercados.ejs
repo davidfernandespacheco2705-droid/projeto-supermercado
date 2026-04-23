@@ -1,0 +1,55 @@
+<%- include("../layout/header") %>
+
+<h2>Gestão de Supermercados</h2>
+
+<h3>Supermercados por aprovar</h3>
+
+<% if (supermercadosPendentes.length > 0) { %>
+  <% supermercadosPendentes.forEach(s => { %>
+    <div>
+      <p><strong>User:</strong> <%= s.user ? s.user.username : "Sem utilizador" %></p>
+
+      <a href="/admin/supermercados/<%= s._id %>">
+        <button type="button">Ver detalhes</button>
+      </a>
+
+      <form action="/supermercados/<%= s._id %>/aprovar" method="POST" style="display:inline;">
+        <button type="submit">Aprovar</button>
+      </form>
+
+      <form action="/supermercados/<%= s._id %>/rejeitar" method="POST" style="display:inline;">
+        <button type="submit">Rejeitar</button>
+      </form>
+    </div>
+    <hr>
+  <% }) %>
+<% } else { %>
+  <p>Não existem supermercados por aprovar.</p>
+<% } %>
+
+<h3>Supermercados aprovados</h3>
+
+<% if (supermercadosAprovados.length > 0) { %>
+  <% supermercadosAprovados.forEach(s => { %>
+    <div>
+      <p><strong>Nome:</strong> <%= s.nome %></p>
+
+      <a href="/admin/supermercados/<%= s._id %>">
+        <button type="button">Ver detalhes</button>
+      </a>
+
+      <form action="/supermercados/<%= s._id %>/rejeitar" method="POST" style="display:inline;">
+        <button type="submit">Desativar</button>
+      </form>
+    </div>
+    <hr>
+  <% }) %>
+<% } else { %>
+  <p>Não existem supermercados aprovados.</p>
+<% } %>
+
+<a href="/admin/dashboard">
+  <button type="button">Voltar</button>
+</a>
+
+<%- include("../layout/footer") %>

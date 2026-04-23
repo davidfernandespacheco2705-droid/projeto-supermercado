@@ -1,0 +1,31 @@
+<h2>Dashboard do Supermercado</h2>
+
+<p><strong>Nome do supermercado:</strong> <%= supermercado.nome %></p>
+<p><strong>Localização:</strong> <%= supermercado.localizacao %></p>
+<p><strong>Estado:</strong> Aprovado</p>
+
+<h3>Produtos</h3>
+
+<% if (produtos.length > 0) { %>
+  <table border="1">
+    <tr>
+      <th>Nome</th>
+      <th>Categoria</th>
+      <th>Preço</th>
+      <th>Stock</th>
+    </tr>
+
+    <% produtos.forEach(produto => { %>
+      <tr>
+        <td><%= produto.nome %></td>
+        <td><%= produto.categoria %></td>
+        <td>€<%= produto.preco %></td>
+        <td><%= produto.stock %></td>
+      </tr>
+    <% }) %>
+  </table>
+<% } else { %>
+  <p>Ainda não existem produtos registados.</p>
+<% } %>
+
+<p><a href="/logout">Logout</a></p>

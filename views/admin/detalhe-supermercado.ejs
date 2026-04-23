@@ -1,0 +1,30 @@
+<%- include("../layout/header") %>
+
+<h2>Detalhes do Supermercado</h2>
+
+<p><strong>Nome:</strong> <%= supermercado.nome %></p>
+<p><strong>Descrição:</strong> <%= supermercado.descricao %></p>
+<p><strong>Localização:</strong> <%= supermercado.localizacao %></p>
+<p><strong>Horário:</strong> <%= supermercado.horario %></p>
+<p><strong>Método de Entrega:</strong> <%= supermercado.metodoEntrega %></p>
+<p><strong>Custo de Entrega:</strong> €<%= supermercado.custoEntrega %></p>
+
+<h3>Dados do utilizador</h3>
+<p><strong>Nome:</strong> <%= supermercado.user ? supermercado.user.nome : "Sem utilizador" %></p>
+<p><strong>Username:</strong> <%= supermercado.user ? supermercado.user.username : "Sem utilizador" %></p>
+<p><strong>Email:</strong> <%= supermercado.user ? supermercado.user.email : "Sem utilizador" %></p>
+<p><strong>Telefone:</strong> <%= supermercado.user ? supermercado.user.telefone : "Sem utilizador" %></p>
+
+<form action="/supermercados/<%= supermercado._id %>/aprovar" method="POST" style="display:inline;">
+  <button type="submit">Aprovar</button>
+</form>
+
+<form action="/supermercados/<%= supermercado._id %>/rejeitar" method="POST" style="display:inline;">
+  <button type="submit">Rejeitar</button>
+</form>
+
+<a href="/admin/dashboard">
+  <button type="button">Voltar</button>
+</a>
+
+<%- include("../layout/footer") %>

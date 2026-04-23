@@ -1,0 +1,14 @@
+<%- include("../layout/header") %>
+
+<h2>Nova Categoria</h2>
+
+<form action="/admin/categorias" method="POST">
+  <input type="text" name="nome" placeholder="Nome da categoria" required>
+  <button type="submit">Guardar</button>
+</form>
+
+<a href="/admin/categorias">
+  <button type="button">Voltar</button>
+</a>
+
+<%- include("../layout/footer") %>
