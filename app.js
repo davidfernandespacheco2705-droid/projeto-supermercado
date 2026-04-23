@@ -511,7 +511,7 @@ app.get("/supermercado/dashboard", auth, authSupermercado, async (req, res) => {
 
   const produtos = await Produto.find({
     supermercado: supermercado._id
-  });
+  }).populate("categoria");
 
   res.render("supermercados/dashboard", {
     user,
@@ -722,3 +722,4 @@ app.get("/vendas", async (req, res) => {
 app.listen(3000, () => {
   console.log("Servidor a correr em http://localhost:3000");
 });
+
