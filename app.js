@@ -23,6 +23,24 @@ app.use(express.static(path.join(__dirname, "assets")));
 
 const JWT_SECRET = "segredo_jwt_supermercado";
 
+// Disponibiliza sessão básica (id/role) para os templates (navbar, etc.)
+app.use((req, res, next) => {
+  const token = req.cookies?.token;
+
+  if (!token) {
+    res.locals.session = null;
+    return next();
+  }
+
+  try {
+    res.locals.session = jwt.verify(token, JWT_SECRET);
+  } catch {
+    res.locals.session = null;
+  }
+
+  return next();
+});
+
 function auth(req, res, next) {
   const token = req.cookies.token;
 
@@ -611,6 +629,7 @@ app.post("/admin/categorias", auth, authAdmin, async (req, res) => {
   await novaCategoria.save();
 
   res.redirect("/admin/categorias");
+});
 
 // EDITA A CATEGORIA
 app.get("/admin/categorias/:id/editar", auth, authAdmin, async (req, res) => {
@@ -628,8 +647,6 @@ app.post("/admin/categorias/:id/editar", auth, authAdmin, async (req, res) => {
 app.post("/admin/categorias/:id/apagar", auth, authAdmin, async (req, res) => {
   await Categoria.findByIdAndDelete(req.params.id);
   res.redirect("/admin/categorias");
-});
-
 });
 
 // ==================== VENDAS ====================

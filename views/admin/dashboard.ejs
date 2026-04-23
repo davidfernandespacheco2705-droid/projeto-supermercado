@@ -1,21 +1,17 @@
-<h2>Dashboard do Admin</h2>
+<%- include("../layout/header", { title: "Admin • Dashboard" }) %>
 
-<p>Bem-vindo, <%= user.nome %></p>
+<div class="stack">
+  <div class="card">
+    <h1>Dashboard do Admin</h1>
+    <p class="muted">Bem-vindo, <strong><%= user.nome %></strong></p>
 
-<div>
-  <a href="/admin/supermercados">
-    <button type="button">Supermercados</button>
-  </a>
-
-  <a href="/admin/produtos">
-    <button type="button">Produtos</button>
-  </a>
-
-  <a href="/admin/categorias">
-    <button type="button">Categorias</button>
-  </a>
+    <div class="row">
+      <a class="btn btn--primary" href="/admin/supermercados">Supermercados</a>
+      <a class="btn btn--primary" href="/admin/produtos">Produtos</a>
+      <a class="btn btn--primary" href="/admin/categorias">Categorias</a>
+      <a class="btn btn--ghost" href="/logout">Sair</a>
+    </div>
+  </div>
 </div>
 
-<br>
-
-<p><a href="/logout">Logout</a></p>
+<%- include("../layout/footer") %>
