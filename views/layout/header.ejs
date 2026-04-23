@@ -1,2 +1,41 @@
-<a href="/">Home</a> |
-<a href="/login">Login</a>
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= typeof title !== "undefined" && title ? title : "Supermercado" %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar para o conteúdo</a>
+
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="<%= (session && session.id) ? '/dashboard' : '/login' %>">
+        <span class="brand__mark" aria-hidden="true">SM</span>
+        <span class="brand__text">Supermercado</span>
+      </a>
+
+      <nav class="nav" aria-label="Navegação principal">
+        <a class="nav__link" href="/produtos">Produtos</a>
+        <a class="nav__link" href="/supermercados">Supermercados</a>
+        <a class="nav__link" href="/vendas">Vendas</a>
+
+        <% if (session && session.role === "admin") { %>
+          <a class="nav__link" href="/admin/dashboard">Admin</a>
+          <a class="nav__link" href="/admin/categorias">Categorias</a>
+        <% } %>
+
+        <span class="nav__spacer" aria-hidden="true"></span>
+
+        <% if (session && session.id) { %>
+          <a class="nav__link nav__link--quiet" href="/perfil">Perfil</a>
+          <a class="btn btn--primary" href="/logout">Sair</a>
+        <% } else { %>
+          <a class="btn btn--primary" href="/login">Entrar</a>
+        <% } %>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container page">

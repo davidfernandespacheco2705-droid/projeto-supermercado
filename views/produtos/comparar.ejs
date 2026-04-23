@@ -16,7 +16,7 @@
 <% if (produtos.length > 0) { %>
   <h3>Resultados</h3>
 
-  <table border="1">
+  <table>
     <tr>
       <th>Nome</th>
       <th>Categoria</th>
@@ -43,6 +43,12 @@
   </table>
 <% } else if (pesquisa) { %>
   <p>Não foram encontrados produtos com esse nome.</p>
+
 <% } else { %>
   <p>Pesquisa um produto para comparar preços entre supermercados.</p>
 <% } %>
+
+<% } %>
+
+<%- include("../layout/footer") %>
+

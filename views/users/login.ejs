@@ -1,9 +1,32 @@
-<h2>Login</h2>
+<%- include("../layout/header", { title: "Login" }) %>
 
-<form action="/login" method="POST">
-  <input type="text" name="username" placeholder="Username" required>
-  <input type="password" name="password" placeholder="Password" required>
-  <button type="submit">Entrar</button>
-</form>
+<div class="auth-shell">
+  <div class="card auth-card">
+    <div class="stack">
+      <div>
+        <h1>Entrar</h1>
+        <p class="muted">Acede à plataforma de gestão de vendas e supermercados.</p>
+      </div>
 
-<a href="/users/novo">Criar conta</a>
+      <form action="/login" method="POST">
+        <div>
+          <label for="username">Username</label>
+          <input id="username" type="text" name="username" placeholder="ex: joao.silva" autocomplete="username" required>
+        </div>
+
+        <div>
+          <label for="password">Password</label>
+          <input id="password" type="password" name="password" placeholder="A tua password" autocomplete="current-password" required>
+        </div>
+
+        <button type="submit">Entrar</button>
+      </form>
+
+      <div class="row">
+        <a class="btn btn--ghost" href="/users/novo">Criar conta</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include("../layout/footer") %>

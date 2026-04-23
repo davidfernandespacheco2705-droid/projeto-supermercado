@@ -23,6 +23,24 @@ app.use(express.static(path.join(__dirname, "assets")));
 
 const JWT_SECRET = "segredo_jwt_supermercado";
 
+// Disponibiliza sessão básica (id/role) para os templates (navbar, etc.)
+app.use((req, res, next) => {
+  const token = req.cookies?.token;
+
+  if (!token) {
+    res.locals.session = null;
+    return next();
+  }
+
+  try {
+    res.locals.session = jwt.verify(token, JWT_SECRET);
+  } catch {
+    res.locals.session = null;
+  }
+
+  return next();
+});
+
 function auth(req, res, next) {
   const token = req.cookies.token;
 
@@ -656,6 +674,62 @@ app.get("/supermercado/clientes", auth, authSupermercado, async (req, res) => {
   const clientes = Object.values(clientesMap);
 
   res.render("supermercados/clientes", { supermercado, clientes });
+});
+
+
+app.get("/admin/supermercados", auth, authAdmin, async (req, res) => {
+  const supermercadosPendentes = await Supermercado.find({ aprovado: false }).populate("user");
+  const supermercadosAprovados = await Supermercado.find({ aprovado: true }).populate("user");
+
+  res.render("admin/supermercados", {
+    supermercadosPendentes,
+    supermercadosAprovados
+  });
+});
+
+app.get("/admin/produtos", auth, authAdmin, async (req, res) => {
+  const produtos = await Produto.find().populate("supermercado");
+
+  res.render("admin/produtos", { produtos });
+});
+
+// LISTA AS VATEGORIAS
+app.get("/admin/categorias", auth, authAdmin, async (req, res) => {
+  const categorias = await Categoria.find();
+  res.render("admin/categorias", { categorias });
+});
+
+// CRIA NOVA CATEGORIA
+app.get("/admin/categorias/nova", auth, authAdmin, (req, res) => {
+  res.render("admin/nova-categoria");
+});
+
+// GUARDA A CATEGORIA
+app.post("/admin/categorias", auth, authAdmin, async (req, res) => {
+  const { nome } = req.body;
+
+  const novaCategoria = new Categoria({ nome });
+  await novaCategoria.save();
+
+  res.redirect("/admin/categorias");
+});
+
+// EDITA A CATEGORIA
+app.get("/admin/categorias/:id/editar", auth, authAdmin, async (req, res) => {
+  const categoria = await Categoria.findById(req.params.id);
+  res.render("admin/editar-categoria", { categoria });
+});
+app.post("/admin/categorias/:id/editar", auth, authAdmin, async (req, res) => {
+  const { nome } = req.body;
+
+  await Categoria.findByIdAndUpdate(req.params.id, { nome });
+  res.redirect("/admin/categorias");
+});
+
+// APAGA A CATEGORIA
+app.post("/admin/categorias/:id/apagar", auth, authAdmin, async (req, res) => {
+  await Categoria.findByIdAndDelete(req.params.id);
+  res.redirect("/admin/categorias");
 });
 
 
