@@ -1,5 +1,3 @@
-<%- include("../layout/header") %>
-
 <h2>Perfil</h2>
 
 <p><strong>Nome:</strong> <%= user.nome %></p>
@@ -9,50 +7,33 @@
 <p><strong>Telefone:</strong> <%= user.telefone %></p>
 <p><strong>Role:</strong> <%= user.role %></p>
 
-<% if (user.role === "admin") { %>
-  <h3>Supermercados por aprovar</h3>
-
-  <% if (supermercadosPendentes.length > 0) { %>
-    <% supermercadosPendentes.forEach(s => { %>
-      <p><%= s.nome %></p>
-
-      <form action="/supermercados/<%= s._id %>/aprovar" method="POST">
-        <button type="submit">Aprovar</button>
-      </form>
-    <% }) %>
-  <% } else { %>
-    <p>Não existem supermercados por aprovar.</p>
-  <% } %>
-<% } %>
-
 <% if (user.role === "cliente") { %>
-  <h3>Histórico de compras</h3>
-  <% vendas.forEach(venda => { %>
-    <p>Total: €<%= venda.total %></p>
-  <% }) %>
-<% } %>
+  <hr>
+  <h3>Histórico de Compras</h3>
 
-<% if (user.role === "supermercado") { %>
-  <h3>Produtos do supermercado</h3>
-
-  <% if (produtos.length > 0) { %>
-    <% produtos.forEach(produto => { %>
+  <% if (vendas.length > 0) { %>
+    <% vendas.forEach(venda => { %>
       <div>
-        <p><strong>Nome:</strong> <%= produto.nome %></p>
-        <p><strong>Categoria:</strong> <%= produto.categoria %></p>
-        <p><strong>Preço:</strong> €<%= produto.preco %></p>
-        <p><strong>Stock:</strong> <%= produto.stock %></p>
+        <p><strong>Total:</strong> €<%= venda.total.toFixed(2) %></p>
+        <p><strong>Data:</strong> <%= venda.createdAt ? new Date(venda.createdAt).toLocaleString() : "Sem data" %></p>
+        <ul>
+          <% venda.produtos.forEach(item => { %>
+            <li>
+              <%= item.produto ? item.produto.nome : "Produto removido" %>
+              x <%= item.quantidade %>
+            </li>
+          <% }) %>
+        </ul>
       </div>
       <hr>
     <% }) %>
   <% } else { %>
-    <p>Não existem produtos registados para este supermercado.</p>
+    <p>Não tens compras ainda.</p>
   <% } %>
 <% } %>
-<% if (user.role === "estafeta") { %>
-  <h3>Área do estafeta</h3>
-  <p>Aqui podes mostrar entregas futuras.</p>
-<% } %>
 
+<br>
 
-<%- include("../layout/footer") %>
+<a href="/dashboard">
+  <button type="button">Voltar</button>
+</a>

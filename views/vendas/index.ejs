@@ -2,33 +2,51 @@
 
 <h2>Histórico de Vendas</h2>
 
-<table border="1">
-  <tr>
-    <th>Cliente</th>
-    <th>Produtos</th>
-    <th>Total</th>
-    <th>Data</th>
-  </tr>
+<p><strong>Supermercado:</strong> <%= supermercado.nome %></p>
 
-  <% vendas.forEach(venda => { %>
+<a href="/vendas/nova">
+  <button type="button">Nova Venda</button>
+</a>
+
+<a href="/supermercado/dashboard">
+  <button type="button">Voltar</button>
+</a>
+
+<hr>
+
+<% if (vendas.length > 0) { %>
+  <table border="1">
     <tr>
-      <td><%= venda.cliente ? venda.cliente.nome : "Sem cliente" %></td>
-
-      <td>
-        <ul>
-          <% venda.produtos.forEach(item => { %>
-            <li>
-              <%= item.produto ? item.produto.nome : "Produto removido" %>
-              x <%= item.quantidade %>
-            </li>
-          <% }) %>
-        </ul>
-      </td>
-
-      <td>€<%= venda.total.toFixed(2) %></td>
-      <td><%= new Date(venda.data).toLocaleString() %></td>
+      <th>Cliente</th>
+      <th>Produtos</th>
+      <th>Total</th>
+      <th>Data</th>
     </tr>
-  <% }) %>
-</table>
+
+    <% vendas.forEach(venda => { %>
+      <tr>
+        <td><%= venda.cliente ? venda.cliente.nome : "Sem cliente" %></td>
+
+        <td>
+          <ul>
+            <% venda.produtos.forEach(item => { %>
+              <li>
+                <%= item.produto ? item.produto.nome : "Produto removido" %>
+                x <%= item.quantidade %>
+              </li>
+            <% }) %>
+          </ul>
+        </td>
+
+        <td>€<%= venda.total.toFixed(2) %></td>
+        <td>
+          <%= venda.createdAt ? new Date(venda.createdAt).toLocaleString() : "Sem data" %>
+        </td>
+      </tr>
+    <% }) %>
+  </table>
+<% } else { %>
+  <p>Ainda não existem vendas registadas.</p>
+<% } %>
 
 <%- include("../layout/footer") %>

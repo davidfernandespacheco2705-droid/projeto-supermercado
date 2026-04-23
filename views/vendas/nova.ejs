@@ -1,22 +1,172 @@
-<%- include("../layout/header") %>
-
 <h2>Nova Venda</h2>
 
-<form action="/vendas" method="POST">
+<form action="/vendas" method="POST" id="formVenda">
   <h3>Cliente</h3>
+
   <input type="text" name="cliente_nome" placeholder="Nome do cliente" required>
   <input type="email" name="cliente_email" placeholder="Email do cliente" required>
 
   <hr>
 
+  <h3>Adicionar Produtos</h3>
+
+  <input type="text" id="pesquisa" placeholder="Pesquisar produto...">
+
+  <select id="categoria">
+    <option value="">Todas as categorias</option>
+    <% categorias.forEach(categoria => { %>
+      <option value="<%= categoria._id %>"><%= categoria.nome %></option>
+    <% }) %>
+  </select>
+
+  <hr>
+
   <% produtos.forEach(produto => { %>
-    <div>
-      <label><%= produto.nome %> (€<%= produto.preco %>)</label>
-      <input type="number" name="quantidades[<%= produto._id %>]" min="0" value="0">
+    <div class="produto"
+      style="display:none;"
+      data-id="<%= produto._id %>"
+      data-nome="<%= produto.nome %>"
+      data-pesquisa="<%= produto.nome.toLowerCase() %>"
+      data-categoria="<%= produto.categoria ? produto.categoria._id : '' %>"
+      data-preco="<%= produto.preco %>">
+
+      <strong><%= produto.nome %></strong>
+      | Categoria: <%= produto.categoria ? produto.categoria.nome : "Sem categoria" %>
+      | Preço: €<%= produto.preco %>
+      | Stock: <%= produto.stock %>
+
+      <br>
+
+      <input type="number" class="qtdProduto" min="1" max="<%= produto.stock %>" value="1">
+      <button type="button" class="btnAdicionar">Adicionar</button>
+
+      <hr>
     </div>
   <% }) %>
 
+  <h3>Produtos na Venda</h3>
+
+  <table border="1" id="tabelaVenda">
+    <tr>
+      <th>Produto</th>
+      <th>Quantidade</th>
+      <th>Preço</th>
+      <th>Subtotal</th>
+      <th>Ação</th>
+    </tr>
+  </table>
+
+  <h3>Total: €<span id="total">0.00</span></h3>
+
   <button type="submit">Finalizar Venda</button>
+
+  <br><br>
+
+  <a href="/supermercado/dashboard">
+    <button type="button">Voltar</button>
+  </a>
 </form>
 
-<%- include("../layout/footer") %>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const pesquisa = document.getElementById("pesquisa");
+  const categoria = document.getElementById("categoria");
+  const produtos = document.querySelectorAll(".produto");
+  const tabelaVenda = document.getElementById("tabelaVenda");
+  const totalSpan = document.getElementById("total");
+  const formVenda = document.getElementById("formVenda");
+
+  let carrinho = {};
+
+  function filtrar() {
+    const texto = pesquisa.value.toLowerCase();
+    const cat = categoria.value;
+
+    produtos.forEach(produto => {
+      const nome = produto.dataset.pesquisa;
+      const categoriaProduto = produto.dataset.categoria;
+
+      if (!cat) {
+        produto.style.display = "none";
+        return;
+      }
+
+      produto.style.display =
+        nome.includes(texto) && categoriaProduto === cat ? "block" : "none";
+    });
+  }
+
+  function atualizarTabela() {
+    document.querySelectorAll(".linhaCarrinho").forEach(linha => linha.remove());
+
+    let total = 0;
+
+    Object.values(carrinho).forEach(item => {
+      const subtotal = item.preco * item.quantidade;
+      total += subtotal;
+
+      const linha = document.createElement("tr");
+      linha.className = "linhaCarrinho";
+
+      linha.innerHTML = `
+        <td>${item.nome}</td>
+        <td>${item.quantidade}</td>
+        <td>€${item.preco.toFixed(2)}</td>
+        <td>€${subtotal.toFixed(2)}</td>
+        <td><button type="button" data-remover="${item.id}">Remover</button></td>
+      `;
+
+      tabelaVenda.appendChild(linha);
+    });
+
+    totalSpan.textContent = total.toFixed(2);
+  }
+
+  document.querySelectorAll(".btnAdicionar").forEach(botao => {
+    botao.addEventListener("click", () => {
+      const div = botao.closest(".produto");
+
+      const id = div.dataset.id;
+      const nome = div.dataset.nome;
+      const preco = parseFloat(div.dataset.preco);
+      const quantidade = parseInt(div.querySelector(".qtdProduto").value);
+
+      if (!quantidade || quantidade <= 0) return;
+
+      carrinho[id] = { id, nome, preco, quantidade };
+
+      let input = document.getElementById("input-" + id);
+
+      if (!input) {
+        input = document.createElement("input");
+        input.type = "hidden";
+        input.name = `quantidades[${id}]`;
+        input.id = "input-" + id;
+        formVenda.appendChild(input);
+      }
+
+      input.value = quantidade;
+
+      atualizarTabela();
+    });
+  });
+
+  tabelaVenda.addEventListener("click", e => {
+    if (e.target.dataset.remover) {
+      const id = e.target.dataset.remover;
+
+      delete carrinho[id];
+
+      const input = document.getElementById("input-" + id);
+      if (input) input.remove();
+
+      atualizarTabela();
+    }
+  });
+
+  pesquisa.addEventListener("input", filtrar);
+  categoria.addEventListener("change", filtrar);
+
+  filtrar();
+});
+</script>

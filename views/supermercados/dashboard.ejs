@@ -7,44 +7,26 @@
   <button type="button">Ver Perfil</button>
 </a>
 
-<a href="/produtos/novo">
-  <button type="button">Novo Produto</button>
+<a href="/supermercado/produtos">
+  <button type="button">Produtos</button>
+</a>
+
+<a href="/vendas/nova">
+  <button type="button">Nova Venda</button>
+</a>
+
+<a href="/vendas">
+  <button type="button">Vendas em caixa</button>
+</a>
+
+<a href="/supermercado/encomendas">
+  <button type="button">Encomendas Online</button>
+</a>
+
+<a href="/supermercado/clientes">
+  <button type="button">Clientes</button>
 </a>
 
 <a href="/logout">
   <button type="button">Logout</button>
 </a>
-
-<hr>
-
-<h3>Os meus produtos</h3>
-
-<% if (produtos.length > 0) { %>
-  <table border="1">
-    <tr>
-      <th>Nome</th>
-      <th>Categoria</th>
-      <th>Preço</th>
-      <th>Stock</th>
-      <th>Ações</th>
-    </tr>
-
-    <% produtos.forEach(produto => { %>
-      <tr>
-        <td><%= produto.nome %></td>
-        <td><%= produto.categoria ? produto.categoria.nome : "Sem categoria" %></td>
-        <td>€<%= produto.preco %></td>
-        <td><%= produto.stock %></td>
-        <td>
-          <a href="/produtos/<%= produto._id %>/editar">Editar</a>
-
-          <form action="/produtos/<%= produto._id %>/apagar" method="POST" style="display:inline;">
-            <button type="submit">Apagar</button>
-          </form>
-        </td>
-      </tr>
-    <% }) %>
-  </table>
-<% } else { %>
-  <p>Ainda não existem produtos registados.</p>
-<% } %>

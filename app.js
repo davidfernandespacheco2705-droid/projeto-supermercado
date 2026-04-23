@@ -85,13 +85,19 @@ app.get("/produtos", async (req, res) => {
   res.render("produtos/index", { produtos, pesquisa });
 });
 
-// ADMIN - VER TODOS OS PRODUTOS
-app.get("/admin/produtos", auth, authAdmin, async (req, res) => {
-  const produtos = await Produto.find()
-    .populate("supermercado")
+// MOSTRA SÓ OS PRODUTOS DO SUPERMERCADO LOGADO
+app.get("/supermercado/produtos", auth, authSupermercado, async (req, res) => {
+  const user = await User.findById(req.user.id);
+  const supermercado = await Supermercado.findOne({ user: user._id });
+
+  if (!supermercado) {
+    return res.send("Supermercado não encontrado.");
+  }
+
+  const produtos = await Produto.find({ supermercado: supermercado._id })
     .populate("categoria");
 
-  res.render("admin/produtos", { produtos });
+  res.render("supermercados/produtos", { supermercado, produtos });
 });
 
 // MOSTRA O FORMULÁRIO DE NOVO PRODUTO
@@ -121,9 +127,9 @@ app.post("/produtos", auth, authSupermercado, async (req, res) => {
     return res.send("O teu supermercado ainda não está aprovado.");
   }
 
-  const novaCategoria = await Categoria.findById(categoria);
+  const categoriaExiste = await Categoria.findById(categoria);
 
-  if (!novaCategoria) {
+  if (!categoriaExiste) {
     return res.send("Categoria inválida.");
   }
 
@@ -146,14 +152,13 @@ app.post("/produtos", auth, authSupermercado, async (req, res) => {
   });
 
   await novoProduto.save();
-  res.redirect("/supermercado/dashboard");
+  res.redirect("/supermercado/produtos");
 });
 
 // MOSTRA O FORMULÁRIO DE EDITAR PRODUTO
-app.post("/produtos/:id/editar", auth, authSupermercado, async (req, res) => {
-  const { nome, descricao, categoria, preco, imagem, stock } = req.body;
-
+app.get("/produtos/:id/editar", auth, authSupermercado, async (req, res) => {
   const produto = await Produto.findById(req.params.id);
+  const categorias = await Categoria.find();
   const user = await User.findById(req.user.id);
   const supermercado = await Supermercado.findOne({ user: user._id });
 
@@ -169,30 +174,11 @@ app.post("/produtos/:id/editar", auth, authSupermercado, async (req, res) => {
     return res.send("Acesso negado.");
   }
 
-  const categoriaExiste = await Categoria.findById(categoria);
-
-  if (!categoriaExiste) {
-    return res.send("Categoria inválida.");
-  }
-
-  if (preco < 0) {
-    return res.send("O preço não pode ser negativo.");
-  }
-
-  if (stock < 0) {
-    return res.send("O stock não pode ser negativo.");
-  }
-
-  await Produto.findByIdAndUpdate(req.params.id, {
-    nome,
-    descricao,
-    categoria,
-    preco,
-    imagem,
-    stock
+  res.render("produtos/editar", {
+    produto,
+    categorias,
+    supermercado
   });
-
-  res.redirect("/supermercado/dashboard");
 });
 
 // GUARDA AS ALTERAÇÕES DO PRODUTO
@@ -221,6 +207,14 @@ app.post("/produtos/:id/editar", auth, authSupermercado, async (req, res) => {
     return res.send("Categoria inválida.");
   }
 
+  if (preco < 0) {
+    return res.send("O preço não pode ser negativo.");
+  }
+
+  if (stock < 0) {
+    return res.send("O stock não pode ser negativo.");
+  }
+
   await Produto.findByIdAndUpdate(req.params.id, {
     nome,
     descricao,
@@ -230,7 +224,7 @@ app.post("/produtos/:id/editar", auth, authSupermercado, async (req, res) => {
     stock
   });
 
-  res.redirect("/supermercado/dashboard");
+  res.redirect("/supermercado/produtos");
 });
 
 // APAGA UM PRODUTO
@@ -252,10 +246,10 @@ app.post("/produtos/:id/apagar", auth, authSupermercado, async (req, res) => {
   }
 
   await Produto.findByIdAndDelete(req.params.id);
-  res.redirect("/supermercado/dashboard");
+  res.redirect("/supermercado/produtos");
 });
 
-// COMPARAR PREÇOS DE UM PRODUTO
+// COMPARAR PREÇOS
 app.get("/comparar", auth, async (req, res) => {
   if (req.user.role !== "admin" && req.user.role !== "cliente") {
     return res.send("Acesso negado.");
@@ -276,6 +270,7 @@ app.get("/comparar", auth, async (req, res) => {
   res.render("produtos/comparar", { produtos, pesquisa });
 });
 
+
 // ==================== SUPERMERCADOS ====================
 
 // LISTA SUPERMERCADOS
@@ -285,20 +280,12 @@ app.get("/supermercados", async (req, res) => {
 });
 
 // MOSTRA O FORMULÁRIO DE NOVO SUPERMERCADO
-app.get("/supermercados/novo", auth, (req, res) => {
-  if (req.user.role !== "supermercado") {
-    return res.send("Só utilizadores com role supermercado podem criar supermercado.");
-  }
-
+app.get("/supermercados/novo", auth, authSupermercado, (req, res) => {
   res.render("supermercados/novo");
 });
 
 // GUARDA UM NOVO SUPERMERCADO
-app.post("/supermercados", auth, async (req, res) => {
-  if (req.user.role !== "supermercado") {
-    return res.send("Só utilizadores com role supermercado podem criar supermercado.");
-  }
-
+app.post("/supermercados", auth, authSupermercado, async (req, res) => {
   const { nome, descricao, localizacao, horario, metodoEntrega, custoEntrega } = req.body;
 
   const supermercadoExistente = await Supermercado.findOne({ user: req.user.id });
@@ -385,8 +372,18 @@ app.post("/supermercados/:id/aprovar", auth, authAdmin, async (req, res) => {
     aprovado: true
   });
 
-  res.redirect("/admin/dashboard");
+  res.redirect("/admin/supermercados");
 });
+
+// REJEITAR / DESATIVAR SUPERMERCADO
+app.post("/supermercados/:id/rejeitar", auth, authAdmin, async (req, res) => {
+  await Supermercado.findByIdAndUpdate(req.params.id, {
+    aprovado: false
+  });
+
+  res.redirect("/admin/supermercados");
+});
+
 
 // ==================== USERS ====================
 
@@ -413,6 +410,7 @@ app.post("/users", async (req, res) => {
   res.redirect("/login");
 });
 
+
 // ==================== LOGIN ====================
 
 // MOSTRA A PÁGINA DE LOGIN
@@ -423,12 +421,7 @@ app.get("/login", (req, res) => {
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
-  console.log("username recebido:", username);
-  console.log("password recebida:", password);
-
   const user = await User.findOne({ username, password });
-
-  console.log("user encontrado:", user);
 
   if (!user) {
     return res.send("Login inválido");
@@ -470,9 +463,9 @@ app.get("/dashboard", auth, async (req, res) => {
   if (user.role === "supermercado") {
     const supermercado = await Supermercado.findOne({ user: user._id });
 
-if (!supermercado) {
-  return res.redirect("/supermercados/novo");
-}
+    if (!supermercado) {
+      return res.redirect("/supermercados/novo");
+    }
 
     if (!supermercado.aprovado) {
       return res.send("O teu supermercado está registado, mas ainda não foi aprovado por um admin.");
@@ -481,21 +474,133 @@ if (!supermercado) {
     return res.redirect("/supermercado/dashboard");
   }
 
+  if (user.role === "estafeta") {
+    return res.redirect("/estafeta/dashboard");
+  }
+
+  if (user.role === "cliente") {
+    return res.redirect("/perfil");
+  }
+
   return res.send("Não tens dashboard disponível.");
 });
+
+app.get("/perfil", auth, async (req, res) => {
+  const user = await User.findById(req.user.id);
+
+  let vendas = [];
+  let supermercadosPendentes = [];
+  let produtos = [];
+
+ if (user.role === "cliente") {
+  vendas = await Venda.find({ cliente: user._id })
+    .populate("produtos.produto")
+    .sort({ createdAt: -1 });
+}
+
+  if (user.role === "admin") {
+    supermercadosPendentes = await Supermercado.find({ aprovado: false });
+  }
+
+  if (user.role === "supermercado") {
+    const supermercadoDoUser = await Supermercado.findOne({ user: user._id });
+
+    if (supermercadoDoUser) {
+      produtos = await Produto.find({
+        supermercado: supermercadoDoUser._id
+      }).populate("categoria");
+    }
+  }
+
+  res.render("users/perfil", {
+    user,
+    vendas,
+    supermercadosPendentes,
+    produtos
+  });
+});
+
+
+// ==================== ADMIN ====================
 
 app.get("/admin/dashboard", auth, authAdmin, async (req, res) => {
   const user = await User.findById(req.user.id);
 
+  res.render("admin/dashboard", { user });
+});
+
+app.get("/admin/supermercados", auth, authAdmin, async (req, res) => {
   const supermercadosPendentes = await Supermercado.find({ aprovado: false }).populate("user");
   const supermercadosAprovados = await Supermercado.find({ aprovado: true }).populate("user");
 
-  res.render("admin/dashboard", {
-    user,
+  res.render("admin/supermercados", {
     supermercadosPendentes,
     supermercadosAprovados
   });
 });
+
+// VER DETALHES DO SUPERMERCADO
+app.get("/admin/supermercados/:id", auth, authAdmin, async (req, res) => {
+  const supermercado = await Supermercado.findById(req.params.id).populate("user");
+
+  if (!supermercado) {
+    return res.send("Supermercado não encontrado.");
+  }
+
+  res.render("admin/detalhe-supermercado", { supermercado });
+});
+
+// VER TODOS OS PRODUTOS
+app.get("/admin/produtos", auth, authAdmin, async (req, res) => {
+  const produtos = await Produto.find()
+    .populate("supermercado")
+    .populate("categoria");
+
+  res.render("admin/produtos", { produtos });
+});
+
+// LISTA CATEGORIAS
+app.get("/admin/categorias", auth, authAdmin, async (req, res) => {
+  const categorias = await Categoria.find();
+  res.render("admin/categorias", { categorias });
+});
+
+// NOVA CATEGORIA
+app.get("/admin/categorias/nova", auth, authAdmin, (req, res) => {
+  res.render("admin/nova-categoria");
+});
+
+// GUARDA CATEGORIA
+app.post("/admin/categorias", auth, authAdmin, async (req, res) => {
+  const { nome } = req.body;
+
+  const novaCategoria = new Categoria({ nome });
+  await novaCategoria.save();
+
+  res.redirect("/admin/categorias");
+});
+
+// EDITAR CATEGORIA
+app.get("/admin/categorias/:id/editar", auth, authAdmin, async (req, res) => {
+  const categoria = await Categoria.findById(req.params.id);
+  res.render("admin/editar-categoria", { categoria });
+});
+
+app.post("/admin/categorias/:id/editar", auth, authAdmin, async (req, res) => {
+  const { nome } = req.body;
+
+  await Categoria.findByIdAndUpdate(req.params.id, { nome });
+  res.redirect("/admin/categorias");
+});
+
+// APAGAR CATEGORIA
+app.post("/admin/categorias/:id/apagar", auth, authAdmin, async (req, res) => {
+  await Categoria.findByIdAndDelete(req.params.id);
+  res.redirect("/admin/categorias");
+});
+
+
+// ==================== SUPERMERCADO ====================
 
 app.get("/supermercado/dashboard", auth, authSupermercado, async (req, res) => {
   const user = await User.findById(req.user.id);
@@ -509,151 +614,96 @@ app.get("/supermercado/dashboard", auth, authSupermercado, async (req, res) => {
     return res.send("O teu supermercado ainda não foi aprovado por um admin.");
   }
 
-  const produtos = await Produto.find({
-    supermercado: supermercado._id
-  }).populate("categoria");
-
   res.render("supermercados/dashboard", {
     user,
-    supermercado,
-    produtos
+    supermercado
   });
 });
 
-// MOSTRA O PERFIL
-app.get("/perfil", auth, async (req, res) => {
+app.get("/estafeta/dashboard", auth, async (req, res) => {
+  if (req.user.role !== "estafeta") {
+    return res.send("Acesso negado.");
+  }
+
   const user = await User.findById(req.user.id);
 
-  let vendas = [];
-  let supermercadosPendentes = [];
-  let produtos = [];
-
-  if (user.role === "cliente") {
-    vendas = await Venda.find({ cliente: user._id }).populate("produtos.produto");
-  }
-
-  if (user.role === "admin") {
-    supermercadosPendentes = await Supermercado.find({ aprovado: false });
-  }
-
-  if (user.role === "supermercado") {
-    const supermercadoDoUser = await Supermercado.findOne({ user: user._id });
-
-    if (supermercadoDoUser) {
-      produtos = await Produto.find({
-        supermercado: supermercadoDoUser._id
-      });
-    }
-  }
-
-  res.render("users/perfil", {
-    user,
-    vendas,
-    supermercadosPendentes,
-    produtos
-  });
+  res.render("estafetas/dashboard", { user });
 });
 
-// ==================== ADMIN ====================
+app.get("/supermercado/encomendas", auth, authSupermercado, (req, res) => {
+  res.send("Página de encomendas do supermercado.");
+});
 
-// VER DETALHES DO SUPERMERCADO (ADMIN)
-app.get("/admin/supermercados/:id", auth, authAdmin, async (req, res) => {
-  const supermercado = await Supermercado.findById(req.params.id).populate("user");
+app.get("/supermercado/clientes", auth, authSupermercado, async (req, res) => {
+  const user = await User.findById(req.user.id);
+  const supermercado = await Supermercado.findOne({ user: user._id });
 
   if (!supermercado) {
     return res.send("Supermercado não encontrado.");
   }
 
-  res.render("admin/detalhe-supermercado", { supermercado });
-});
+  const vendas = await Venda.find({ supermercado: supermercado._id })
+    .populate("cliente");
 
-// REJEITAR SUPERMERCADO
-app.post("/supermercados/:id/rejeitar", auth, authAdmin, async (req, res) => {
-  await Supermercado.findByIdAndUpdate(req.params.id, {
-    aprovado: false
+  // tirar clientes únicos
+  const clientesMap = {};
+  vendas.forEach(v => {
+    if (v.cliente) {
+      clientesMap[v.cliente._id] = v.cliente;
+    }
   });
 
-  res.redirect("/admin/dashboard");
+  const clientes = Object.values(clientesMap);
+
+  res.render("supermercados/clientes", { supermercado, clientes });
 });
 
-app.get("/admin/supermercados", auth, authAdmin, async (req, res) => {
-  const supermercadosPendentes = await Supermercado.find({ aprovado: false }).populate("user");
-  const supermercadosAprovados = await Supermercado.find({ aprovado: true }).populate("user");
-
-  res.render("admin/supermercados", {
-    supermercadosPendentes,
-    supermercadosAprovados
-  });
-});
-
-app.get("/admin/produtos", auth, authAdmin, async (req, res) => {
-  const produtos = await Produto.find().populate("supermercado");
-
-  res.render("admin/produtos", { produtos });
-});
-
-// LISTA AS VATEGORIAS
-app.get("/admin/categorias", auth, authAdmin, async (req, res) => {
-  const categorias = await Categoria.find();
-  res.render("admin/categorias", { categorias });
-});
-
-// CRIA NOVA CATEGORIA
-app.get("/admin/categorias/nova", auth, authAdmin, (req, res) => {
-  res.render("admin/nova-categoria");
-});
-
-// GUARDA A CATEGORIA
-app.post("/admin/categorias", auth, authAdmin, async (req, res) => {
-  const { nome } = req.body;
-
-  const novaCategoria = new Categoria({ nome });
-  await novaCategoria.save();
-
-  res.redirect("/admin/categorias");
-
-// EDITA A CATEGORIA
-app.get("/admin/categorias/:id/editar", auth, authAdmin, async (req, res) => {
-  const categoria = await Categoria.findById(req.params.id);
-  res.render("admin/editar-categoria", { categoria });
-});
-app.post("/admin/categorias/:id/editar", auth, authAdmin, async (req, res) => {
-  const { nome } = req.body;
-
-  await Categoria.findByIdAndUpdate(req.params.id, { nome });
-  res.redirect("/admin/categorias");
-});
-
-// APAGA A CATEGORIA
-app.post("/admin/categorias/:id/apagar", auth, authAdmin, async (req, res) => {
-  await Categoria.findByIdAndDelete(req.params.id);
-  res.redirect("/admin/categorias");
-});
-
-});
 
 // ==================== VENDAS ====================
 
 // MOSTRA O FORMULÁRIO DE NOVA VENDA
-app.get("/vendas/nova", async (req, res) => {
-  const produtos = await Produto.find();
-  res.render("vendas/nova", { produtos });
+app.get("/vendas/nova", auth, authSupermercado, async (req, res) => {
+  const user = await User.findById(req.user.id);
+  const supermercado = await Supermercado.findOne({ user: user._id, aprovado: true });
+
+  if (!supermercado) {
+    return res.send("Supermercado não encontrado ou não aprovado.");
+  }
+
+  const categorias = await Categoria.find();
+
+  const produtos = await Produto.find({ supermercado: supermercado._id })
+    .populate("categoria");
+
+  res.render("vendas/nova", {
+    produtos,
+    supermercado,
+    categorias
+  });
 });
 
 // GUARDA UMA NOVA VENDA
-app.post("/vendas", async (req, res) => {
+app.post("/vendas", auth, authSupermercado, async (req, res) => {
   const { cliente_nome, cliente_email } = req.body;
   const quantidades = req.body.quantidades;
 
-  // PROCURA O CLIENTE
+  const user = await User.findById(req.user.id);
+  const supermercado = await Supermercado.findOne({ user: user._id, aprovado: true });
+
+  if (!supermercado) {
+    return res.send("Supermercado não encontrado ou não aprovado.");
+  }
+
   let cliente = await User.findOne({ email: cliente_email });
 
-  // CRIA O CLIENTE SE NÃO EXISTIR
   if (!cliente) {
     cliente = new User({
       nome: cliente_nome,
+      username: cliente_email,
       email: cliente_email,
       password: "1234",
+      morada: "",
+      telefone: "",
       role: "cliente"
     });
 
@@ -662,42 +712,51 @@ app.post("/vendas", async (req, res) => {
 
   let produtosVenda = [];
   let total = 0;
+  let existeProdutoSelecionado = false;
 
-  // PERCORRE OS PRODUTOS DA VENDA
   for (let produtoId in quantidades) {
     const quantidade = parseInt(quantidades[produtoId]);
 
-    // VERIFICA SE A QUANTIDADE É MAIOR QUE ZERO
     if (quantidade > 0) {
+      existeProdutoSelecionado = true;
+
       const produto = await Produto.findById(produtoId);
 
-      // ADICIONA O PRODUTO À VENDA
+      if (!produto) {
+        return res.send("Produto não encontrado.");
+      }
+
+      if (String(produto.supermercado) !== String(supermercado._id)) {
+        return res.send("Acesso negado. Produto inválido para este supermercado.");
+      }
+
+      if (produto.stock < quantidade) {
+        return res.send("Stock insuficiente para o produto: " + produto.nome);
+      }
+
       produtosVenda.push({
         produto: produtoId,
         quantidade
       });
 
-      // CALCULA O TOTAL
       total += produto.preco * quantidade;
 
-      // VERIFICA O STOCK
-      if (produto.stock >= quantidade) {
-        produto.stock -= quantidade;
-        await produto.save();
-      } else {
-        return res.send("Stock insuficiente para o produto: " + produto.nome);
-      }
+      produto.stock -= quantidade;
+      await produto.save();
     }
   }
 
-  // AJUSTA O TOTAL
+  if (!existeProdutoSelecionado) {
+    return res.send("Tens de selecionar pelo menos um produto.");
+  }
+
   total = Number(total.toFixed(2));
 
-  // GUARDA UMA NOVA VENDA
   const novaVenda = new Venda({
     produtos: produtosVenda,
     total,
-    cliente: cliente._id
+    cliente: cliente._id,
+    supermercado: supermercado._id
   });
 
   await novaVenda.save();
@@ -705,15 +764,20 @@ app.post("/vendas", async (req, res) => {
   res.redirect("/vendas");
 });
 
-// ==================== HISTÓRICO DE VENDAS ====================
+// LISTA VENDAS DO SUPERMERCADO LOGADO
+app.get("/vendas", auth, authSupermercado, async (req, res) => {
+  const user = await User.findById(req.user.id);
+  const supermercado = await Supermercado.findOne({ user: user._id, aprovado: true });
 
-// LISTA VENDAS
-app.get("/vendas", async (req, res) => {
-  const vendas = await Venda.find()
+  if (!supermercado) {
+    return res.send("Supermercado não encontrado ou não aprovado.");
+  }
+
+  const vendas = await Venda.find({ supermercado: supermercado._id })
     .populate("cliente")
     .populate("produtos.produto");
 
-  res.render("vendas/index", { vendas });
+  res.render("vendas/index", { vendas, supermercado });
 });
 
 // ==================== SERVIDOR ====================

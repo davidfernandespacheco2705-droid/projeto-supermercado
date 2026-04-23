@@ -5,20 +5,29 @@ const vendaSchema = new mongoose.Schema({
     {
       produto: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Produto"
+        ref: "Produto",
+        required: true
       },
-      quantidade: Number
+      quantidade: {
+        type: Number,
+        required: true
+      }
     }
   ],
-  total: Number,
+  total: {
+    type: Number,
+    required: true
+  },
   cliente: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: "User",
+    required: true
   },
-  data: {
-    type: Date,
-    default: Date.now
+  supermercado: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Supermercado",
+    required: true
   }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model("Venda", vendaSchema);

@@ -1,0 +1,45 @@
+<h2>Os Meus Produtos</h2>
+
+<p><strong>Supermercado:</strong> <%= supermercado.nome %></p>
+
+<a href="/produtos/novo">
+  <button type="button">Novo Produto</button>
+</a>
+
+<a href="/supermercado/dashboard">
+  <button type="button">Voltar</button>
+</a>
+
+<hr>
+
+<% if (produtos.length > 0) { %>
+  <table border="1">
+    <tr>
+      <th>Nome</th>
+      <th>Descrição</th>
+      <th>Categoria</th>
+      <th>Preço</th>
+      <th>Stock</th>
+      <th>Ações</th>
+    </tr>
+
+    <% produtos.forEach(produto => { %>
+      <tr>
+        <td><%= produto.nome %></td>
+        <td><%= produto.descricao %></td>
+        <td><%= produto.categoria ? produto.categoria.nome : "Sem categoria" %></td>
+        <td>€<%= produto.preco %></td>
+        <td><%= produto.stock %></td>
+        <td>
+          <a href="/produtos/<%= produto._id %>/editar">Editar</a>
+
+          <form action="/produtos/<%= produto._id %>/apagar" method="POST" style="display:inline;">
+            <button type="submit">Apagar</button>
+          </form>
+        </td>
+      </tr>
+    <% }) %>
+  </table>
+<% } else { %>
+  <p>Ainda não existem produtos registados.</p>
+<% } %>

@@ -1,11 +1,17 @@
-<%- include("../layout/header") %>
-
 <h2>Comparar Preços</h2>
 
 <form method="GET" action="/comparar">
   <input type="text" name="pesquisa" placeholder="Pesquisar produto..." value="<%= pesquisa || '' %>">
   <button type="submit">Pesquisar</button>
 </form>
+
+<br>
+
+<a href="/dashboard">
+  <button type="button">Voltar</button>
+</a>
+
+<hr>
 
 <% if (produtos.length > 0) { %>
   <h3>Resultados</h3>
@@ -23,7 +29,7 @@
       <tr>
         <td><%= produto.nome %></td>
         <td><%= produto.categoria ? produto.categoria.nome : "Sem categoria" %></td>
-        <td>€<%= produto.preco %></td>
+        <td>€<%= Number(produto.preco).toFixed(2) %></td>
         <td><%= produto.supermercado ? produto.supermercado.nome : "Sem supermercado" %></td>
         <td>
           <% if (index === 0) { %>
@@ -37,6 +43,6 @@
   </table>
 <% } else if (pesquisa) { %>
   <p>Não foram encontrados produtos com esse nome.</p>
+<% } else { %>
+  <p>Pesquisa um produto para comparar preços entre supermercados.</p>
 <% } %>
-
-<%- include("../layout/footer") %>

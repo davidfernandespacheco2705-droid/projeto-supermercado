@@ -1,0 +1,27 @@
+<h2>Os Meus Clientes</h2>
+
+<p><strong>Supermercado:</strong> <%= supermercado.nome %></p>
+
+<a href="/supermercado/dashboard">
+  <button type="button">Voltar</button>
+</a>
+
+<hr>
+
+<% if (clientes.length > 0) { %>
+  <table border="1">
+    <tr>
+      <th>Nome</th>
+      <th>Email</th>
+    </tr>
+
+    <% clientes.forEach(cliente => { %>
+      <tr>
+        <td><%= cliente.nome %></td>
+        <td><%= cliente.email %></td>
+      </tr>
+    <% }) %>
+  </table>
+<% } else { %>
+  <p>Ainda não existem clientes.</p>
+<% } %>
