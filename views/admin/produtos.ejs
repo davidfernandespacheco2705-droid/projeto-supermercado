@@ -19,6 +19,7 @@
       <table>
         <tr>
           <th>Nome</th>
+          <th>Imagem</th>
           <th>Categoria</th>
           <th>Preço</th>
           <th>Stock</th>
@@ -28,6 +29,7 @@
         <% produtos.forEach(produto => { %>
           <tr>
             <td><%= produto.nome %></td>
+            <td><%- include("../layout/produtoImagem", { produto, size: "sm" }) %></td>
             <td><%= produto.categoria ? produto.categoria.nome : "Sem categoria" %></td>
             <td>€<%= produto.preco %></td>
             <td><%= produto.stock %></td>

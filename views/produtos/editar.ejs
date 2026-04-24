@@ -14,7 +14,7 @@
   </div>
 
   <div class="card">
-    <form action="/produtos/<%= produto._id %>/editar" method="POST">
+    <form action="/produtos/<%= produto._id %>/editar" method="POST" enctype="multipart/form-data">
       <div class="stack">
         <div>
           <label for="nome">Nome</label>
@@ -43,8 +43,14 @@
         </div>
 
         <div>
+          <label for="imagemFile">Imagem (ficheiro)</label>
+          <input id="imagemFile" type="file" name="imagemFile" accept="image/*">
+          <p class="muted">Opcional. Se enviares um ficheiro, ele tem prioridade sobre o URL.</p>
+        </div>
+
+        <div>
           <label for="imagem">Imagem (URL)</label>
-          <input id="imagem" type="text" name="imagem" value="<%= produto.imagem %>" required>
+          <input id="imagem" type="text" name="imagem" value="<%= produto.imagem %>">
         </div>
 
         <div>

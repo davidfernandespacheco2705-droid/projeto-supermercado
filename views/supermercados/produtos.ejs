@@ -34,11 +34,7 @@
             <td><%= produto.categoria ? produto.categoria.nome : "Sem categoria" %></td>
             <td>€<%= produto.preco %></td>
             <td>
-              <% if (produto.imagem) { %>
-                <img src="<%= produto.imagem %>" alt="produto" width="60">
-              <% } else { %>
-                <span class="muted">Sem imagem</span>
-              <% } %>
+              <%- include("../layout/produtoImagem", { produto, size: "sm" }) %>
             </td>
             <td><%= produto.stock %></td>
             <td>

@@ -48,7 +48,7 @@
             <td><%= produto.categoria ? produto.categoria.nome : "Sem categoria" %></td>
             <td>€<%= produto.preco %></td>
             <td>
-              <img src="<%= produto.imagem %>" alt="produto" width="60">
+              <%- include("../layout/produtoImagem", { produto, size: "sm" }) %>
             </td>
             <td><%= produto.stock %></td>
             <td><%= produto.supermercado ? produto.supermercado.nome : "Sem supermercado" %></td>

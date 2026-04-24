@@ -28,6 +28,7 @@
       <table>
         <tr>
           <th>Nome</th>
+          <th>Imagem</th>
           <th>Categoria</th>
           <th>Preço</th>
           <th>Supermercado</th>
@@ -37,6 +38,7 @@
         <% produtos.forEach((produto, index) => { %>
           <tr>
             <td><%= produto.nome %></td>
+            <td><%- include("../layout/produtoImagem", { produto, size: "sm" }) %></td>
             <td><%= produto.categoria ? produto.categoria.nome : "Sem categoria" %></td>
             <td>€<%= Number(produto.preco).toFixed(2) %></td>
             <td><%= produto.supermercado ? produto.supermercado.nome : "Sem supermercado" %></td>

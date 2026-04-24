@@ -81,10 +81,12 @@
               data-nome="<%= produto.nome %>"
               data-pesquisa="<%= produto.nome.toLowerCase() %>"
               data-categoria="<%= produto.categoria ? produto.categoria._id : '' %>"
-              data-preco="<%= produto.preco %>">
+              data-preco="<%= produto.preco %>"
+              data-imagem="<%= produto.imagem || '' %>">
 
               <div class="stack">
                 <div>
+                  <%- include("../layout/produtoImagem", { produto, size: "sm" }) %>
                   <strong><%= produto.nome %></strong>
                   <div class="muted">
                     Categoria: <%= produto.categoria ? produto.categoria.nome : "Sem categoria" %>
@@ -112,6 +114,7 @@
           <table id="tabelaVenda">
             <tr>
               <th>Produto</th>
+              <th>Imagem</th>
               <th>Quantidade</th>
               <th>Preço</th>
               <th>Subtotal</th>
@@ -139,6 +142,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const formVenda = document.getElementById("formVenda");
 
   let carrinho = {};
+
+  function thumbHtml(url) {
+    if (url) {
+      return `<img class="thumb thumb--sm" src="${url}" alt="produto">`;
+    }
+
+    return `
+      <span class="thumb thumb--sm thumb--placeholder" aria-label="Sem imagem" title="Sem imagem">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+          <path fill="currentColor" d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2ZM5 5h14v10.2l-2.6-2.6a2 2 0 0 0-2.8 0l-1.8 1.8-2.8-2.8a2 2 0 0 0-2.8 0L5 12.2V5Zm0 14v-4l3.6-3.6 2.8 2.8-3.8 3.8H5Zm14 0H9.4l5.6-5.6 4 4V19ZM8.5 9A1.5 1.5 0 1 0 8.5 6a1.5 1.5 0 0 0 0 3Z"/>
+        </svg>
+      </span>
+    `;
+  }
 
   function filtrar() {
     const texto = pesquisa.value.toLowerCase();
@@ -168,6 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       linha.innerHTML = `
         <td>${item.nome}</td>
+        <td>${thumbHtml(item.imagem)}</td>
         <td>${item.quantidade}</td>
         <td>€${item.preco.toFixed(2)}</td>
         <td>€${subtotal.toFixed(2)}</td>
@@ -188,10 +206,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const nome = div.dataset.nome;
       const preco = parseFloat(div.dataset.preco);
       const quantidade = parseInt(div.querySelector(".qtdProduto").value);
+      const imagem = div.dataset.imagem;
 
       if (!quantidade || quantidade <= 0) return;
 
-      carrinho[id] = { id, nome, preco, quantidade };
+      carrinho[id] = { id, nome, preco, quantidade, imagem };
 
       let input = document.getElementById("input-" + id);
 
