@@ -1,0 +1,59 @@
+<%- include("../layout/header", { title: "Admin • Utilizadores" }) %>
+
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Utilizadores</h1>
+        <p class="muted">Gerir contas e roles.</p>
+      </div>
+      <div class="page-head__actions">
+        <a class="btn btn--ghost" href="/admin/dashboard">Voltar</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <% if (users.length > 0) { %>
+      <table>
+        <tr>
+          <th>Nome</th>
+          <th>Username</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Ações</th>
+        </tr>
+
+        <% users.forEach(u => { %>
+          <tr>
+            <td><%= u.nome %></td>
+            <td><%= u.username %></td>
+            <td><%= u.email %></td>
+            <td><span class="pill"><%= u.role %></span></td>
+            <td>
+              <div class="row">
+                <form action="/admin/users/<%= u._id %>/role" method="POST" style="display:inline;">
+                  <select name="role">
+                    <option value="cliente" <%= u.role === "cliente" ? "selected" : "" %>>cliente</option>
+                    <option value="supermercado" <%= u.role === "supermercado" ? "selected" : "" %>>supermercado</option>
+                    <option value="estafeta" <%= u.role === "estafeta" ? "selected" : "" %>>estafeta</option>
+                    <option value="admin" <%= u.role === "admin" ? "selected" : "" %>>admin</option>
+                  </select>
+                  <button class="btn btn--ghost btn--sm" type="submit">Guardar</button>
+                </form>
+
+                <form action="/admin/users/<%= u._id %>/apagar" method="POST" style="display:inline;">
+                  <button class="btn btn--danger btn--sm" type="submit">Apagar</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    <% } else { %>
+      <p class="muted">Sem utilizadores.</p>
+    <% } %>
+  </div>
+</div>
+
+<%- include("../layout/footer") %>

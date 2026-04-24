@@ -1,27 +1,37 @@
-<h2>Os Meus Clientes</h2>
+<%- include("../layout/header", { title: "Market Place • Clientes" }) %>
 
-<p><strong>Supermercado:</strong> <%= supermercado.nome %></p>
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Os Meus Clientes</h1>
+        <p class="muted"><strong>Supermercado:</strong> <%= supermercado.nome %></p>
+      </div>
+      <div class="page-head__actions">
+        <a class="btn btn--ghost" href="/supermercado/dashboard">Voltar</a>
+      </div>
+    </div>
+  </div>
 
-<a href="/supermercado/dashboard">
-  <button type="button">Voltar</button>
-</a>
+  <div class="card">
+    <% if (clientes.length > 0) { %>
+      <table>
+        <tr>
+          <th>Nome</th>
+          <th>Email</th>
+        </tr>
 
-<hr>
+        <% clientes.forEach(cliente => { %>
+          <tr>
+            <td><%= cliente.nome %></td>
+            <td><%= cliente.email %></td>
+          </tr>
+        <% }) %>
+      </table>
+    <% } else { %>
+      <p class="muted">Ainda não existem clientes.</p>
+    <% } %>
+  </div>
+</div>
 
-<% if (clientes.length > 0) { %>
-  <table border="1">
-    <tr>
-      <th>Nome</th>
-      <th>Email</th>
-    </tr>
-
-    <% clientes.forEach(cliente => { %>
-      <tr>
-        <td><%= cliente.nome %></td>
-        <td><%= cliente.email %></td>
-      </tr>
-    <% }) %>
-  </table>
-<% } else { %>
-  <p>Ainda não existem clientes.</p>
-<% } %>
+<%- include("../layout/footer") %>

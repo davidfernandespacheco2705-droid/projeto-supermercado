@@ -1,45 +1,62 @@
-<h2>Os Meus Produtos</h2>
+<%- include("../layout/header", { title: "Market Place • Produtos" }) %>
 
-<p><strong>Supermercado:</strong> <%= supermercado.nome %></p>
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Os Meus Produtos</h1>
+        <p class="muted"><strong>Supermercado:</strong> <%= supermercado.nome %></p>
+      </div>
+      <div class="page-head__actions">
+        <a class="btn btn--primary" href="/produtos/novo">Novo Produto</a>
+        <a class="btn btn--ghost" href="/supermercado/dashboard">Voltar</a>
+      </div>
+    </div>
+  </div>
 
-<a href="/produtos/novo">
-  <button type="button">Novo Produto</button>
-</a>
+  <div class="card">
+    <% if (produtos.length > 0) { %>
+      <table>
+        <tr>
+          <th>Nome</th>
+          <th>Descrição</th>
+          <th>Categoria</th>
+          <th>Preço</th>
+          <th>Imagem</th>
+          <th>Stock</th>
+          <th>Ações</th>
+        </tr>
 
-<a href="/supermercado/dashboard">
-  <button type="button">Voltar</button>
-</a>
+        <% produtos.forEach(produto => { %>
+          <tr>
+            <td><%= produto.nome %></td>
+            <td><%= produto.descricao %></td>
+            <td><%= produto.categoria ? produto.categoria.nome : "Sem categoria" %></td>
+            <td>€<%= produto.preco %></td>
+            <td>
+              <% if (produto.imagem) { %>
+                <img src="<%= produto.imagem %>" alt="produto" width="60">
+              <% } else { %>
+                <span class="muted">Sem imagem</span>
+              <% } %>
+            </td>
+            <td><%= produto.stock %></td>
+            <td>
+              <div class="row">
+                <a class="btn btn--ghost btn--sm" href="/produtos/<%= produto._id %>/editar">Editar</a>
 
-<hr>
+                <form action="/produtos/<%= produto._id %>/apagar" method="POST" style="display:inline;">
+                  <button class="btn btn--danger btn--sm" type="submit">Apagar</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    <% } else { %>
+      <p class="muted">Ainda não existem produtos registados.</p>
+    <% } %>
+  </div>
+</div>
 
-<% if (produtos.length > 0) { %>
-  <table border="1">
-    <tr>
-      <th>Nome</th>
-      <th>Descrição</th>
-      <th>Categoria</th>
-      <th>Preço</th>
-      <th>Stock</th>
-      <th>Ações</th>
-    </tr>
-
-    <% produtos.forEach(produto => { %>
-      <tr>
-        <td><%= produto.nome %></td>
-        <td><%= produto.descricao %></td>
-        <td><%= produto.categoria ? produto.categoria.nome : "Sem categoria" %></td>
-        <td>€<%= produto.preco %></td>
-        <td><%= produto.stock %></td>
-        <td>
-          <a href="/produtos/<%= produto._id %>/editar">Editar</a>
-
-          <form action="/produtos/<%= produto._id %>/apagar" method="POST" style="display:inline;">
-            <button type="submit">Apagar</button>
-          </form>
-        </td>
-      </tr>
-    <% }) %>
-  </table>
-<% } else { %>
-  <p>Ainda não existem produtos registados.</p>
-<% } %>
+<%- include("../layout/footer") %>

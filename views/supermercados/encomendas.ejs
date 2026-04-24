@@ -1,0 +1,45 @@
+<%- include("../layout/header", { title: "Market Place • Encomendas" }) %>
+
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Encomendas Online</h1>
+        <p class="muted"><strong>Supermercado:</strong> <%= supermercado.nome %></p>
+      </div>
+      <div class="page-head__actions">
+        <a class="btn btn--ghost" href="/supermercado/dashboard">Voltar</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <% if (encomendas.length > 0) { %>
+      <table>
+        <tr>
+          <th>Cliente</th>
+          <th>Total</th>
+          <th>Método</th>
+          <th>Estado</th>
+          <th>Estafeta</th>
+          <th>Data</th>
+        </tr>
+
+        <% encomendas.forEach(e => { %>
+          <tr>
+            <td><%= e.cliente ? e.cliente.nome : "—" %></td>
+            <td>€<%= e.total.toFixed(2) %></td>
+            <td><%= e.metodoEntrega || "—" %></td>
+            <td><span class="pill"><%= e.estadoEntrega || "pendente" %></span></td>
+            <td><%= e.estafeta ? e.estafeta.nome : "—" %></td>
+            <td><%= e.createdAt ? new Date(e.createdAt).toLocaleString() : "—" %></td>
+          </tr>
+        <% }) %>
+      </table>
+    <% } else { %>
+      <p class="muted">Ainda não existem encomendas com entrega.</p>
+    <% } %>
+  </div>
+</div>
+
+<%- include("../layout/footer") %>

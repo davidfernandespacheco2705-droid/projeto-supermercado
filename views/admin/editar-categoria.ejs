@@ -1,14 +1,27 @@
-<%- include("../layout/header") %>
+<%- include("../layout/header", { title: "Admin • Editar Categoria" }) %>
 
-<h2>Editar Categoria</h2>
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Editar Categoria</h1>
+        <p class="muted">Atualiza o nome da categoria.</p>
+      </div>
+      <div class="page-head__actions">
+        <a class="btn btn--ghost" href="/admin/categorias">Voltar</a>
+      </div>
+    </div>
+  </div>
 
-<form action="/admin/categorias/<%= categoria._id %>/editar" method="POST">
-  <input type="text" name="nome" value="<%= categoria.nome %>" required>
-  <button type="submit">Guardar</button>
-</form>
-
-<a href="/admin/categorias">
-  <button type="button">Voltar</button>
-</a>
+  <div class="card">
+    <form action="/admin/categorias/<%= categoria._id %>/editar" method="POST">
+      <div>
+        <label for="nome">Nome</label>
+        <input id="nome" type="text" name="nome" value="<%= categoria.nome %>" required>
+      </div>
+      <button type="submit">Guardar</button>
+    </form>
+  </div>
+</div>
 
 <%- include("../layout/footer") %>

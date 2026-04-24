@@ -1,55 +1,81 @@
-<%- include("../layout/header") %>
+<%- include("../layout/header", { title: "Admin • Supermercados" }) %>
 
-<h2>Gestão de Supermercados</h2>
-
-<h3>Supermercados por aprovar</h3>
-
-<% if (supermercadosPendentes.length > 0) { %>
-  <% supermercadosPendentes.forEach(s => { %>
-    <div>
-      <p><strong>User:</strong> <%= s.user ? s.user.username : "Sem utilizador" %></p>
-
-      <a href="/admin/supermercados/<%= s._id %>">
-        <button type="button">Ver detalhes</button>
-      </a>
-
-      <form action="/supermercados/<%= s._id %>/aprovar" method="POST" style="display:inline;">
-        <button type="submit">Aprovar</button>
-      </form>
-
-      <form action="/supermercados/<%= s._id %>/rejeitar" method="POST" style="display:inline;">
-        <button type="submit">Rejeitar</button>
-      </form>
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Gestão de Supermercados</h1>
+        <p class="muted">Aprova, desativa e consulta detalhes.</p>
+      </div>
+      <div class="page-head__actions">
+        <a class="btn btn--ghost" href="/admin/dashboard">Voltar</a>
+      </div>
     </div>
-    <hr>
-  <% }) %>
-<% } else { %>
-  <p>Não existem supermercados por aprovar.</p>
-<% } %>
+  </div>
 
-<h3>Supermercados aprovados</h3>
+  <div class="card">
+    <h2>Supermercados por aprovar</h2>
 
-<% if (supermercadosAprovados.length > 0) { %>
-  <% supermercadosAprovados.forEach(s => { %>
-    <div>
-      <p><strong>Nome:</strong> <%= s.nome %></p>
+    <% if (supermercadosPendentes.length > 0) { %>
+      <table>
+        <tr>
+          <th>User</th>
+          <th>Ações</th>
+        </tr>
 
-      <a href="/admin/supermercados/<%= s._id %>">
-        <button type="button">Ver detalhes</button>
-      </a>
+        <% supermercadosPendentes.forEach(s => { %>
+          <tr>
+            <td><%= s.user ? s.user.username : "Sem utilizador" %></td>
+            <td>
+              <div class="row">
+                <a class="btn btn--ghost btn--sm" href="/admin/supermercados/<%= s._id %>">Ver detalhes</a>
 
-      <form action="/supermercados/<%= s._id %>/rejeitar" method="POST" style="display:inline;">
-        <button type="submit">Desativar</button>
-      </form>
-    </div>
-    <hr>
-  <% }) %>
-<% } else { %>
-  <p>Não existem supermercados aprovados.</p>
-<% } %>
+                <form action="/supermercados/<%= s._id %>/aprovar" method="POST" style="display:inline;">
+                  <button class="btn btn--primary btn--sm" type="submit">Aprovar</button>
+                </form>
 
-<a href="/admin/dashboard">
-  <button type="button">Voltar</button>
-</a>
+                <form action="/supermercados/<%= s._id %>/rejeitar" method="POST" style="display:inline;">
+                  <button class="btn btn--danger btn--sm" type="submit">Rejeitar</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    <% } else { %>
+      <p class="muted">Não existem supermercados por aprovar.</p>
+    <% } %>
+  </div>
+
+  <div class="card">
+    <h2>Supermercados aprovados</h2>
+
+    <% if (supermercadosAprovados.length > 0) { %>
+      <table>
+        <tr>
+          <th>Nome</th>
+          <th>Ações</th>
+        </tr>
+
+        <% supermercadosAprovados.forEach(s => { %>
+          <tr>
+            <td><%= s.nome %></td>
+            <td>
+              <div class="row">
+                <a class="btn btn--ghost btn--sm" href="/admin/supermercados/<%= s._id %>">Ver detalhes</a>
+
+                <form action="/supermercados/<%= s._id %>/rejeitar" method="POST" style="display:inline;">
+                  <button class="btn btn--warning btn--sm" type="submit">Desativar</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    <% } else { %>
+      <p class="muted">Não existem supermercados aprovados.</p>
+    <% } %>
+  </div>
+</div>
 
 <%- include("../layout/footer") %>

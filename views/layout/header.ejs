@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><%= typeof title !== "undefined" && title ? title : "Supermercado" %></title>
+  <title><%= typeof title !== "undefined" && title ? title : "Market Place" %></title>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
@@ -12,27 +12,39 @@
   <header class="topbar">
     <div class="container topbar__inner">
       <a class="brand" href="<%= (session && session.id) ? '/dashboard' : '/login' %>">
-        <span class="brand__mark" aria-hidden="true">SM</span>
-        <span class="brand__text">Supermercado</span>
+        <span class="brand__mark" aria-hidden="true">MP</span>
+        <span class="brand__text">Market Place</span>
       </a>
 
       <nav class="nav" aria-label="Navegação principal">
-        <a class="nav__link" href="/produtos">Produtos</a>
-        <a class="nav__link" href="/supermercados">Supermercados</a>
-        <a class="nav__link" href="/vendas">Vendas</a>
-
-        <% if (session && session.role === "admin") { %>
-          <a class="nav__link" href="/admin/dashboard">Admin</a>
-          <a class="nav__link" href="/admin/categorias">Categorias</a>
-        <% } %>
-
-        <span class="nav__spacer" aria-hidden="true"></span>
-
         <% if (session && session.id) { %>
-          <a class="nav__link nav__link--quiet" href="/perfil">Perfil</a>
+          <% if (!(typeof minimalNav !== "undefined" && minimalNav)) { %>
+            <% if (session.role === "admin") { %>
+              <a class="nav__link" href="/admin/dashboard">Dashboard</a>
+              <a class="nav__link" href="/admin/supermercados">Supermercados</a>
+              <a class="nav__link" href="/admin/produtos">Produtos</a>
+              <a class="nav__link" href="/admin/categorias">Categorias</a>
+              <a class="nav__link" href="/admin/vendas">Vendas</a>
+              <a class="nav__link" href="/admin/users">Utilizadores</a>
+            <% } else if (session.role === "supermercado") { %>
+              <a class="nav__link" href="/supermercado/dashboard">Dashboard</a>
+              <a class="nav__link" href="/supermercado/produtos">Produtos</a>
+              <a class="nav__link" href="/vendas">Vendas</a>
+            <% } else if (session.role === "estafeta") { %>
+              <a class="nav__link" href="/estafeta/dashboard">Dashboard</a>
+              <a class="nav__link" href="/estafeta/entregas">Entregas</a>
+            <% } else { %>
+              <a class="nav__link" href="/produtos">Produtos</a>
+              <a class="nav__link" href="/comparar">Comparar</a>
+            <% } %>
+          <% } %>
+
+          <span class="nav__spacer" aria-hidden="true"></span>
+
+          <a class="btn btn--ghost" href="/perfil">Perfil</a>
           <a class="btn btn--primary" href="/logout">Sair</a>
         <% } else { %>
-          <a class="btn btn--primary" href="/login">Entrar</a>
+          <!-- Sem botão "Entrar": acesso via /login -->
         <% } %>
       </nav>
     </div>

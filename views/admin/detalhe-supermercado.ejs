@@ -1,30 +1,51 @@
-<%- include("../layout/header") %>
+<%- include("../layout/header", { title: "Admin • Detalhes do Supermercado" }) %>
 
-<h2>Detalhes do Supermercado</h2>
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Detalhes do Supermercado</h1>
+        <p class="muted">Consulta a informação e aprova/rejeita o pedido.</p>
+      </div>
+      <div class="page-head__actions">
+        <a class="btn btn--ghost" href="/admin/dashboard">Voltar</a>
+      </div>
+    </div>
+  </div>
 
-<p><strong>Nome:</strong> <%= supermercado.nome %></p>
-<p><strong>Descrição:</strong> <%= supermercado.descricao %></p>
-<p><strong>Localização:</strong> <%= supermercado.localizacao %></p>
-<p><strong>Horário:</strong> <%= supermercado.horario %></p>
-<p><strong>Método de Entrega:</strong> <%= supermercado.metodoEntrega %></p>
-<p><strong>Custo de Entrega:</strong> €<%= supermercado.custoEntrega %></p>
+  <div class="card">
+    <h2>Supermercado</h2>
+    <div class="stack">
+      <p><strong>Nome:</strong> <%= supermercado.nome %></p>
+      <p><strong>Descrição:</strong> <%= supermercado.descricao %></p>
+      <p><strong>Localização:</strong> <%= supermercado.localizacao %></p>
+      <p><strong>Horário:</strong> <%= supermercado.horario %></p>
+      <p><strong>Método de Entrega:</strong> <%= supermercado.metodoEntrega %></p>
+      <p><strong>Custo de Entrega:</strong> €<%= supermercado.custoEntrega %></p>
+    </div>
+  </div>
 
-<h3>Dados do utilizador</h3>
-<p><strong>Nome:</strong> <%= supermercado.user ? supermercado.user.nome : "Sem utilizador" %></p>
-<p><strong>Username:</strong> <%= supermercado.user ? supermercado.user.username : "Sem utilizador" %></p>
-<p><strong>Email:</strong> <%= supermercado.user ? supermercado.user.email : "Sem utilizador" %></p>
-<p><strong>Telefone:</strong> <%= supermercado.user ? supermercado.user.telefone : "Sem utilizador" %></p>
+  <div class="card">
+    <h2>Dados do utilizador</h2>
+    <div class="stack">
+      <p><strong>Nome:</strong> <%= supermercado.user ? supermercado.user.nome : "Sem utilizador" %></p>
+      <p><strong>Username:</strong> <%= supermercado.user ? supermercado.user.username : "Sem utilizador" %></p>
+      <p><strong>Email:</strong> <%= supermercado.user ? supermercado.user.email : "Sem utilizador" %></p>
+      <p><strong>Telefone:</strong> <%= supermercado.user ? supermercado.user.telefone : "Sem utilizador" %></p>
+    </div>
 
-<form action="/supermercados/<%= supermercado._id %>/aprovar" method="POST" style="display:inline;">
-  <button type="submit">Aprovar</button>
-</form>
+    <hr class="divider">
 
-<form action="/supermercados/<%= supermercado._id %>/rejeitar" method="POST" style="display:inline;">
-  <button type="submit">Rejeitar</button>
-</form>
+    <div class="row">
+      <form action="/supermercados/<%= supermercado._id %>/aprovar" method="POST" style="display:inline;">
+        <button class="btn btn--primary" type="submit">Aprovar</button>
+      </form>
 
-<a href="/admin/dashboard">
-  <button type="button">Voltar</button>
-</a>
+      <form action="/supermercados/<%= supermercado._id %>/rejeitar" method="POST" style="display:inline;">
+        <button class="btn btn--danger" type="submit">Rejeitar</button>
+      </form>
+    </div>
+  </div>
+</div>
 
 <%- include("../layout/footer") %>

@@ -1,51 +1,55 @@
-<%- include("../layout/header") %>
+<%- include("../layout/header", { title: "Supermercados • Novo" }) %>
 
-<h2>Novo Supermercado</h2>
-
-<form action="/supermercados" method="POST">
-  <div>
-    <label>Nome</label><br>
-    <input type="text" name="nome" required>
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Novo Supermercado</h1>
+        <p class="muted">Preenche os dados do supermercado.</p>
+      </div>
+      <div class="page-head__actions">
+        <a class="btn btn--ghost" href="/supermercados">Voltar</a>
+      </div>
+    </div>
   </div>
 
-  <br>
+  <div class="card">
+    <form action="/supermercados" method="POST">
+      <div class="stack">
+        <div>
+          <label for="nome">Nome</label>
+          <input id="nome" type="text" name="nome" required>
+        </div>
 
-  <div>
-    <label>Descrição</label><br>
-    <input type="text" name="descricao" required>
+        <div>
+          <label for="descricao">Descrição</label>
+          <input id="descricao" type="text" name="descricao" required>
+        </div>
+
+        <div>
+          <label for="localizacao">Localização</label>
+          <input id="localizacao" type="text" name="localizacao" required>
+        </div>
+
+        <div>
+          <label for="horario">Horário</label>
+          <input id="horario" type="text" name="horario" required>
+        </div>
+
+        <div>
+          <label for="metodoEntrega">Método de Entrega</label>
+          <input id="metodoEntrega" type="text" name="metodoEntrega" required>
+        </div>
+
+        <div>
+          <label for="custoEntrega">Custo de Entrega</label>
+          <input id="custoEntrega" type="number" step="0.01" name="custoEntrega" required>
+        </div>
+
+        <button type="submit">Guardar</button>
+      </div>
+    </form>
   </div>
-
-  <br>
-
-  <div>
-    <label>Localização</label><br>
-    <input type="text" name="localizacao" required>
-  </div>
-
-  <br>
-
-  <div>
-    <label>Horário</label><br>
-    <input type="text" name="horario" required>
-  </div>
-
-  <br>
-
-  <div>
-    <label>Método de Entrega</label><br>
-    <input type="text" name="metodoEntrega" required>
-  </div>
-
-  <br>
-
-  <div>
-    <label>Custo de Entrega</label><br>
-    <input type="number" step="0.01" name="custoEntrega" required>
-  </div>
-
-  <br>
-
-  <button type="submit">Guardar</button>
-</form>
+</div>
 
 <%- include("../layout/footer") %>

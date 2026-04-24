@@ -1,34 +1,46 @@
-<%- include("../layout/header") %>
+<%- include("../layout/header", { title: "Admin • Categorias" }) %>
 
-<h2>Gestão de Categorias</h2>
-
-<a href="/admin/categorias/nova">
-  <button type="button">Nova Categoria</button>
-</a>
-
-<br><br>
-
-<% if (categorias.length > 0) { %>
-  <% categorias.forEach(categoria => { %>
-    <div>
-      <p><strong>Nome:</strong> <%= categoria.nome %></p>
-
-      <a href="/admin/categorias/<%= categoria._id %>/editar">
-        <button type="button">Editar</button>
-      </a>
-
-      <form action="/admin/categorias/<%= categoria._id %>/apagar" method="POST" style="display:inline;">
-        <button type="submit">Apagar</button>
-      </form>
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Gestão de Categorias</h1>
+        <p class="muted">Cria, edita e remove categorias.</p>
+      </div>
+      <div class="page-head__actions">
+        <a class="btn btn--primary" href="/admin/categorias/nova">Nova Categoria</a>
+        <a class="btn btn--ghost" href="/admin/dashboard">Voltar</a>
+      </div>
     </div>
-    <hr>
-  <% }) %>
-<% } else { %>
-  <p>Não existem categorias criadas.</p>
-<% } %>
+  </div>
 
-<a href="/admin/dashboard">
-  <button type="button">Voltar</button>
-</a>
+  <div class="card">
+    <% if (categorias.length > 0) { %>
+      <table>
+        <tr>
+          <th>Nome</th>
+          <th>Ações</th>
+        </tr>
+
+        <% categorias.forEach(categoria => { %>
+          <tr>
+            <td><%= categoria.nome %></td>
+            <td>
+              <div class="row">
+                <a class="btn btn--ghost btn--sm" href="/admin/categorias/<%= categoria._id %>/editar">Editar</a>
+
+                <form action="/admin/categorias/<%= categoria._id %>/apagar" method="POST" style="display:inline;">
+                  <button class="btn btn--danger btn--sm" type="submit">Apagar</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    <% } else { %>
+      <p class="muted">Não existem categorias criadas.</p>
+    <% } %>
+  </div>
+</div>
 
 <%- include("../layout/footer") %>

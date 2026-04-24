@@ -1,23 +1,57 @@
-<%- include("../layout/header") %>
+<%- include("../layout/header", { title: "Utilizadores • Novo" }) %>
 
-<h2>Novo Utilizador</h2>
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Novo Utilizador</h1>
+        <p class="muted">Cria uma conta com o perfil correto.</p>
+      </div>
+    </div>
+  </div>
 
-<form action="/users" method="POST">
-  <input type="text" name="nome" placeholder="Nome" required>
-  <input type="text" name="username" placeholder="Username" required>
-  <input type="email" name="email" placeholder="Email" required>
-  <input type="password" name="password" placeholder="Password" required>
-  <input type="text" name="morada" placeholder="Morada" required>
-  <input type="text" name="telefone" placeholder="Telefone" required>
+  <div class="card">
+    <form action="/users" method="POST">
+      <div class="stack">
+        <div>
+          <label for="nome">Nome</label>
+          <input id="nome" type="text" name="nome" placeholder="Nome" required>
+        </div>
+        <div>
+          <label for="username">Username</label>
+          <input id="username" type="text" name="username" placeholder="Username" required>
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input id="email" type="email" name="email" placeholder="Email" required>
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input id="password" type="password" name="password" placeholder="Password" required>
+        </div>
+        <div>
+          <label for="morada">Morada</label>
+          <input id="morada" type="text" name="morada" placeholder="Morada" required>
+        </div>
+        <div>
+          <label for="telefone">Telefone</label>
+          <input id="telefone" type="text" name="telefone" placeholder="Telefone" required>
+        </div>
 
-  <select name="role" required>
-    <option value="cliente">Cliente</option>
-    <option value="supermercado">Supermercado</option>
-    <option value="estafeta">Estafeta</option>
-    <option value="admin">Admin</option>
-  </select>
+        <div>
+          <label for="role">Role</label>
+          <select id="role" name="role" required>
+            <option value="cliente">Cliente</option>
+            <option value="supermercado">Supermercado</option>
+            <option value="estafeta">Estafeta</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
 
-  <button type="submit">Guardar</button>
-</form>
+        <button type="submit">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <%- include("../layout/footer") %>

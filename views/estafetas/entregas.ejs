@@ -1,0 +1,47 @@
+<%- include("../layout/header", { title: "Estafeta • Entregas" }) %>
+
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Entregas disponíveis</h1>
+        <p class="muted">Aceita uma entrega pendente.</p>
+      </div>
+      <div class="page-head__actions">
+        <a class="btn btn--ghost" href="/estafeta/dashboard">Voltar</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <% if (vendas.length > 0) { %>
+      <table>
+        <tr>
+          <th>Cliente</th>
+          <th>Supermercado</th>
+          <th>Total</th>
+          <th>Método</th>
+          <th>Ação</th>
+        </tr>
+
+        <% vendas.forEach(venda => { %>
+          <tr>
+            <td><%= venda.cliente ? venda.cliente.nome : "Sem cliente" %></td>
+            <td><%= venda.supermercado ? venda.supermercado.nome : "Sem supermercado" %></td>
+            <td>€<%= venda.total.toFixed(2) %></td>
+            <td><%= venda.metodoEntrega || "—" %></td>
+            <td>
+              <form action="/estafeta/entregas/<%= venda._id %>/aceitar" method="POST" style="display:inline;">
+                <button class="btn btn--primary btn--sm" type="submit">Aceitar</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    <% } else { %>
+      <p class="muted">Não há entregas pendentes neste momento.</p>
+    <% } %>
+  </div>
+</div>
+
+<%- include("../layout/footer") %>

@@ -18,6 +18,29 @@ const vendaSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  tipoEntrega: {
+    type: String,
+    enum: ["loja", "domicilio"],
+    default: "loja"
+  },
+  metodoEntrega: {
+    type: String,
+    default: ""
+  },
+  custoEntrega: {
+    type: Number,
+    default: 0
+  },
+  estadoEntrega: {
+    type: String,
+    enum: ["pendente", "aceite", "em_transito", "entregue"],
+    default: null
+  },
+  estafeta: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null
+  },
   cliente: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

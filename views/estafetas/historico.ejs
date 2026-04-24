@@ -1,0 +1,41 @@
+<%- include("../layout/header", { title: "Estafeta • Histórico" }) %>
+
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Histórico de entregas</h1>
+        <p class="muted">Entregas concluídas.</p>
+      </div>
+      <div class="page-head__actions">
+        <a class="btn btn--ghost" href="/estafeta/dashboard">Voltar</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <% if (vendas.length > 0) { %>
+      <table>
+        <tr>
+          <th>Cliente</th>
+          <th>Supermercado</th>
+          <th>Total</th>
+          <th>Data</th>
+        </tr>
+
+        <% vendas.forEach(venda => { %>
+          <tr>
+            <td><%= venda.cliente ? venda.cliente.nome : "Sem cliente" %></td>
+            <td><%= venda.supermercado ? venda.supermercado.nome : "Sem supermercado" %></td>
+            <td>€<%= venda.total.toFixed(2) %></td>
+            <td><%= venda.updatedAt ? new Date(venda.updatedAt).toLocaleString() : "—" %></td>
+          </tr>
+        <% }) %>
+      </table>
+    <% } else { %>
+      <p class="muted">Ainda não tens entregas concluídas.</p>
+    <% } %>
+  </div>
+</div>
+
+<%- include("../layout/footer") %>

@@ -1,37 +1,44 @@
-<%- include("../layout/header") %>
+<%- include("../layout/header", { title: "Admin • Produtos" }) %>
 
-<h2>Gestão de Produtos</h2>
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Gestão de Produtos</h1>
+        <p class="muted">Visão global dos produtos registados.</p>
+      </div>
+      <div class="page-head__actions">
+        <a class="btn btn--ghost" href="/comparar">Comparar Preços</a>
+        <a class="btn btn--ghost" href="/admin/dashboard">Voltar</a>
+      </div>
+    </div>
+  </div>
 
-<% if (produtos.length > 0) { %>
-  <table>
-    <tr>
-      <th>Nome</th>
-      <th>Categoria</th>
-      <th>Preço</th>
-      <th>Stock</th>
-      <th>Supermercado</th>
-    </tr>
+  <div class="card">
+    <% if (produtos.length > 0) { %>
+      <table>
+        <tr>
+          <th>Nome</th>
+          <th>Categoria</th>
+          <th>Preço</th>
+          <th>Stock</th>
+          <th>Supermercado</th>
+        </tr>
 
-    <% produtos.forEach(produto => { %>
-      <tr>
-        <td><%= produto.nome %></td>
-        <td><%= produto.categoria ? produto.categoria.nome : "Sem categoria" %></td>
-        <td>€<%= produto.preco %></td>
-        <td><%= produto.stock %></td>
-        <td><%= produto.supermercado ? produto.supermercado.nome : "Sem supermercado" %></td>
-      </tr>
-    <% }) %>
-  </table>
-<% } else { %>
-  <p>Não existem produtos registados.</p>
-<% } %>
-
-<a href="/comparar">
-  <button type="button">Comparar Preços</button>
-</a>
-
-<a href="/admin/dashboard">
-  <button type="button">Voltar</button>
-</a>
+        <% produtos.forEach(produto => { %>
+          <tr>
+            <td><%= produto.nome %></td>
+            <td><%= produto.categoria ? produto.categoria.nome : "Sem categoria" %></td>
+            <td>€<%= produto.preco %></td>
+            <td><%= produto.stock %></td>
+            <td><%= produto.supermercado ? produto.supermercado.nome : "Sem supermercado" %></td>
+          </tr>
+        <% }) %>
+      </table>
+    <% } else { %>
+      <p class="muted">Não existem produtos registados.</p>
+    <% } %>
+  </div>
+</div>
 
 <%- include("../layout/footer") %>

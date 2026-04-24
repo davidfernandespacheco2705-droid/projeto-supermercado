@@ -1,39 +1,61 @@
-<h2>Perfil</h2>
+<%- include("../layout/header", { title: "Perfil" }) %>
 
-<p><strong>Nome:</strong> <%= user.nome %></p>
-<p><strong>Username:</strong> <%= user.username %></p>
-<p><strong>Email:</strong> <%= user.email %></p>
-<p><strong>Morada:</strong> <%= user.morada %></p>
-<p><strong>Telefone:</strong> <%= user.telefone %></p>
-<p><strong>Role:</strong> <%= user.role %></p>
-
-<% if (user.role === "cliente") { %>
-  <hr>
-  <h3>Histórico de Compras</h3>
-
-  <% if (vendas.length > 0) { %>
-    <% vendas.forEach(venda => { %>
-      <div>
-        <p><strong>Total:</strong> €<%= venda.total.toFixed(2) %></p>
-        <p><strong>Data:</strong> <%= venda.createdAt ? new Date(venda.createdAt).toLocaleString() : "Sem data" %></p>
-        <ul>
-          <% venda.produtos.forEach(item => { %>
-            <li>
-              <%= item.produto ? item.produto.nome : "Produto removido" %>
-              x <%= item.quantidade %>
-            </li>
-          <% }) %>
-        </ul>
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Perfil</h1>
+        <p class="muted">Dados da tua conta.</p>
       </div>
-      <hr>
-    <% }) %>
-  <% } else { %>
-    <p>Não tens compras ainda.</p>
+      <div class="page-head__actions">
+        <a class="btn btn--ghost" href="/dashboard">Voltar</a>
+      </div>
+    </div>
+
+    <div class="stack">
+      <p><strong>Nome:</strong> <%= user.nome %></p>
+      <p><strong>Username:</strong> <%= user.username %></p>
+      <p><strong>Email:</strong> <%= user.email %></p>
+      <p><strong>Morada:</strong> <%= user.morada %></p>
+      <p><strong>Telefone:</strong> <%= user.telefone %></p>
+      <p><strong>Role:</strong> <%= user.role %></p>
+    </div>
+  </div>
+
+  <% if (user.role === "cliente") { %>
+    <div class="card">
+      <h2>Histórico de Compras</h2>
+
+      <% if (vendas.length > 0) { %>
+        <div class="stack">
+          <% vendas.forEach(venda => { %>
+            <div class="card">
+              <div class="page-head">
+                <div class="page-head__title">
+                  <h3>Total: €<%= venda.total.toFixed(2) %></h3>
+                  <p class="muted">
+                    <strong>Data:</strong>
+                    <%= venda.createdAt ? new Date(venda.createdAt).toLocaleString() : "Sem data" %>
+                  </p>
+                </div>
+              </div>
+
+              <ul>
+                <% venda.produtos.forEach(item => { %>
+                  <li>
+                    <%= item.produto ? item.produto.nome : "Produto removido" %>
+                    x <%= item.quantidade %>
+                  </li>
+                <% }) %>
+              </ul>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <p class="muted">Não tens compras ainda.</p>
+      <% } %>
+    </div>
   <% } %>
-<% } %>
+</div>
 
-<br>
-
-<a href="/dashboard">
-  <button type="button">Voltar</button>
-</a>
+<%- include("../layout/footer") %>

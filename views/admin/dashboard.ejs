@@ -1,19 +1,20 @@
-<%- include("../layout/header", { title: "Admin • Dashboard" }) %>
-
-
-<p>Bem-vindo/a, <%= user.nome %></p>
+<%- include("../layout/header", { title: "Admin • Dashboard", minimalNav: true }) %>
 
 <div class="stack">
-  <div class="card">
-    <h1>Dashboard do Admin</h1>
-    <p class="muted">Bem-vindo, <strong><%= user.nome %></strong></p>
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Dashboard do Admin</h1>
+        <p class="muted">Bem-vindo, <strong><%= user.nome %></strong></p>
+      </div>
 
-
-    <div class="row">
-      <a class="btn btn--primary" href="/admin/supermercados">Supermercados</a>
-      <a class="btn btn--primary" href="/admin/produtos">Produtos</a>
-      <a class="btn btn--primary" href="/admin/categorias">Categorias</a>
-      <a class="btn btn--ghost" href="/logout">Sair</a>
+      <div class="page-head__actions">
+        <a class="btn btn--ghost" href="/admin/supermercados">Supermercados</a>
+        <a class="btn btn--ghost" href="/admin/produtos">Produtos</a>
+        <a class="btn btn--ghost" href="/admin/categorias">Categorias</a>
+        <a class="btn btn--ghost" href="/admin/vendas">Vendas</a>
+        <a class="btn btn--ghost" href="/admin/users">Utilizadores</a>
+      </div>
     </div>
   </div>
 </div>

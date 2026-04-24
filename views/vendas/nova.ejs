@@ -1,71 +1,133 @@
-<h2>Nova Venda</h2>
+<%- include("../layout/header", { title: "Vendas • Nova" }) %>
 
-<form action="/vendas" method="POST" id="formVenda">
-  <h3>Cliente</h3>
-
-  <input type="text" name="cliente_nome" placeholder="Nome do cliente" required>
-  <input type="email" name="cliente_email" placeholder="Email do cliente" required>
-
-  <hr>
-
-  <h3>Adicionar Produtos</h3>
-
-  <input type="text" id="pesquisa" placeholder="Pesquisar produto...">
-
-  <select id="categoria">
-    <option value="">Todas as categorias</option>
-    <% categorias.forEach(categoria => { %>
-      <option value="<%= categoria._id %>"><%= categoria.nome %></option>
-    <% }) %>
-  </select>
-
-  <hr>
-
-  <% produtos.forEach(produto => { %>
-    <div class="produto"
-      style="display:none;"
-      data-id="<%= produto._id %>"
-      data-nome="<%= produto.nome %>"
-      data-pesquisa="<%= produto.nome.toLowerCase() %>"
-      data-categoria="<%= produto.categoria ? produto.categoria._id : '' %>"
-      data-preco="<%= produto.preco %>">
-
-      <strong><%= produto.nome %></strong>
-      | Categoria: <%= produto.categoria ? produto.categoria.nome : "Sem categoria" %>
-      | Preço: €<%= produto.preco %>
-      | Stock: <%= produto.stock %>
-
-      <br>
-
-      <input type="number" class="qtdProduto" min="1" max="<%= produto.stock %>" value="1">
-      <button type="button" class="btnAdicionar">Adicionar</button>
-
-      <hr>
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Nova Venda</h1>
+        <p class="muted">Seleciona um cliente e adiciona produtos ao carrinho.</p>
+      </div>
+      <div class="page-head__actions">
+        <a class="btn btn--ghost" href="/supermercado/dashboard">Voltar</a>
+      </div>
     </div>
-  <% }) %>
+  </div>
 
-  <h3>Produtos na Venda</h3>
+  <div class="card">
+    <form action="/vendas" method="POST" id="formVenda">
+      <div class="stack">
+        <div>
+          <h2>Cliente</h2>
+          <div class="stack">
+            <div>
+              <label for="cliente_nome">Nome</label>
+              <input id="cliente_nome" type="text" name="cliente_nome" placeholder="Nome do cliente" required>
+            </div>
+            <div>
+              <label for="cliente_email">Email</label>
+              <input id="cliente_email" type="email" name="cliente_email" placeholder="Email do cliente" required>
+            </div>
+          </div>
+        </div>
 
-  <table border="1" id="tabelaVenda">
-    <tr>
-      <th>Produto</th>
-      <th>Quantidade</th>
-      <th>Preço</th>
-      <th>Subtotal</th>
-      <th>Ação</th>
-    </tr>
-  </table>
+        <div>
+          <h2>Entrega</h2>
+          <div class="stack">
+            <div class="row">
+              <label>
+                <input type="radio" name="tipoEntrega" value="loja" checked>
+                Em loja
+              </label>
+              <label>
+                <input type="radio" name="tipoEntrega" value="domicilio">
+                Entrega ao domicílio
+              </label>
+            </div>
 
-  <h3>Total: €<span id="total">0.00</span></h3>
+            <p class="muted">
+              <strong>Método:</strong> <%= supermercado.metodoEntrega || "—" %>
+              • <strong>Custo:</strong> €<%= Number(supermercado.custoEntrega || 0).toFixed(2) %>
+            </p>
+          </div>
+        </div>
 
-  <button type="submit">Finalizar Venda</button>
+        <hr class="divider">
 
-  <br><br>
+        <div>
+          <h2>Adicionar Produtos</h2>
+          <div class="stack">
+            <div>
+              <label for="pesquisa">Pesquisar</label>
+              <input type="text" id="pesquisa" placeholder="Pesquisar produto...">
+            </div>
 
-  <a href="/supermercado/dashboard">
-    <button type="button">Voltar</button>
-  </a>
-</form>
+            <div>
+              <label for="categoria">Categoria</label>
+              <select id="categoria">
+                <option value="">Todas as categorias</option>
+                <% categorias.forEach(categoria => { %>
+                  <option value="<%= categoria._id %>"><%= categoria.nome %></option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack">
+          <% produtos.forEach(produto => { %>
+            <div class="produto"
+              style="display:none;"
+              data-id="<%= produto._id %>"
+              data-nome="<%= produto.nome %>"
+              data-pesquisa="<%= produto.nome.toLowerCase() %>"
+              data-categoria="<%= produto.categoria ? produto.categoria._id : '' %>"
+              data-preco="<%= produto.preco %>">
+
+              <div class="stack">
+                <div>
+                  <strong><%= produto.nome %></strong>
+                  <div class="muted">
+                    Categoria: <%= produto.categoria ? produto.categoria.nome : "Sem categoria" %>
+                    • Preço: €<%= produto.preco %>
+                    • Stock: <%= produto.stock %>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div style="min-width: 160px;">
+                    <label class="visually-hidden">Quantidade</label>
+                    <input type="number" class="qtdProduto" min="1" max="<%= produto.stock %>" value="1">
+                  </div>
+                  <button type="button" class="btn btn--primary btn--sm btnAdicionar">Adicionar</button>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+
+        <hr class="divider">
+
+        <div>
+          <h2>Produtos na Venda</h2>
+          <table id="tabelaVenda">
+            <tr>
+              <th>Produto</th>
+              <th>Quantidade</th>
+              <th>Preço</th>
+              <th>Subtotal</th>
+              <th>Ação</th>
+            </tr>
+          </table>
+        </div>
+
+        <div class="row row--between">
+          <h3>Total: €<span id="total">0.00</span></h3>
+          <button type="submit">Finalizar Venda</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
@@ -85,14 +147,10 @@ document.addEventListener("DOMContentLoaded", () => {
     produtos.forEach(produto => {
       const nome = produto.dataset.pesquisa;
       const categoriaProduto = produto.dataset.categoria;
+      const matchTexto = nome.includes(texto);
+      const matchCategoria = !cat || categoriaProduto === cat;
 
-      if (!cat) {
-        produto.style.display = "none";
-        return;
-      }
-
-      produto.style.display =
-        nome.includes(texto) && categoriaProduto === cat ? "block" : "none";
+      produto.style.display = matchTexto && matchCategoria ? "block" : "none";
     });
   }
 
@@ -113,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${item.quantidade}</td>
         <td>€${item.preco.toFixed(2)}</td>
         <td>€${subtotal.toFixed(2)}</td>
-        <td><button type="button" data-remover="${item.id}">Remover</button></td>
+        <td><button class="btn btn--danger btn--sm" type="button" data-remover="${item.id}">Remover</button></td>
       `;
 
       tabelaVenda.appendChild(linha);
@@ -170,3 +228,5 @@ document.addEventListener("DOMContentLoaded", () => {
   filtrar();
 });
 </script>
+
+<%- include("../layout/footer") %>

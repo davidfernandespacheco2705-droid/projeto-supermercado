@@ -1,9 +1,28 @@
-<h2>Dashboard do Estafeta</h2>
+<%- include("../layout/header", { title: "Estafeta • Dashboard" }) %>
 
-<p>Bem-vindo, <%= user.nome %></p>
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Dashboard do Estafeta</h1>
+        <p class="muted">Bem-vindo, <strong><%= user.nome %></strong>.</p>
+      </div>
+    </div>
 
-<p>Área de entregas (em desenvolvimento)</p>
+    <div class="row">
+      <span class="pill">Pendentes: <%= pendentes %></span>
+      <span class="pill">Ativas: <%= minhasAtivas %></span>
+      <span class="pill">Histórico: <%= historico %></span>
+    </div>
 
-<a href="/logout">
-  <button type="button">Logout</button>
-</a>
+    <hr class="divider">
+
+    <div class="row">
+      <a class="btn btn--primary" href="/estafeta/entregas">Entregas disponíveis</a>
+      <a class="btn btn--ghost" href="/estafeta/minhas">Minhas entregas</a>
+      <a class="btn btn--ghost" href="/estafeta/historico">Histórico</a>
+    </div>
+  </div>
+</div>
+
+<%- include("../layout/footer") %>

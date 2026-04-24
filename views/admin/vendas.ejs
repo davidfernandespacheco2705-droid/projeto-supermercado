@@ -1,15 +1,14 @@
-<%- include("../layout/header", { title: "Vendas" }) %>
+<%- include("../layout/header", { title: "Admin • Vendas" }) %>
 
 <div class="stack">
   <div class="card card--soft">
     <div class="page-head">
       <div class="page-head__title">
-        <h1>Histórico de Vendas</h1>
-        <p class="muted"><strong>Supermercado:</strong> <%= supermercado.nome %></p>
+        <h1>Vendas / Encomendas</h1>
+        <p class="muted">Monitorização global.</p>
       </div>
       <div class="page-head__actions">
-        <a class="btn btn--primary" href="/vendas/nova">Nova Venda</a>
-        <a class="btn btn--ghost" href="/supermercado/dashboard">Voltar</a>
+        <a class="btn btn--ghost" href="/admin/dashboard">Voltar</a>
       </div>
     </div>
   </div>
@@ -18,28 +17,18 @@
     <% if (vendas.length > 0) { %>
       <table>
         <tr>
+          <th>Supermercado</th>
           <th>Cliente</th>
-          <th>Produtos</th>
           <th>Total</th>
           <th>Entrega</th>
+          <th>Estafeta</th>
           <th>Data</th>
         </tr>
 
         <% vendas.forEach(venda => { %>
           <tr>
-            <td><%= venda.cliente ? venda.cliente.nome : "Sem cliente" %></td>
-
-            <td>
-              <ul>
-                <% venda.produtos.forEach(item => { %>
-                  <li>
-                    <%= item.produto ? item.produto.nome : "Produto removido" %>
-                    x <%= item.quantidade %>
-                  </li>
-                <% }) %>
-              </ul>
-            </td>
-
+            <td><%= venda.supermercado ? venda.supermercado.nome : "—" %></td>
+            <td><%= venda.cliente ? venda.cliente.nome : "—" %></td>
             <td>€<%= venda.total.toFixed(2) %></td>
             <td>
               <% if (venda.tipoEntrega === "domicilio") { %>
@@ -52,12 +41,13 @@
                 <span class="muted">Em loja</span>
               <% } %>
             </td>
-            <td><%= venda.createdAt ? new Date(venda.createdAt).toLocaleString() : "Sem data" %></td>
+            <td><%= venda.estafeta ? venda.estafeta.nome : "—" %></td>
+            <td><%= venda.createdAt ? new Date(venda.createdAt).toLocaleString() : "—" %></td>
           </tr>
         <% }) %>
       </table>
     <% } else { %>
-      <p class="muted">Ainda não existem vendas registadas.</p>
+      <p class="muted">Ainda não existem vendas/encomendas.</p>
     <% } %>
   </div>
 </div>

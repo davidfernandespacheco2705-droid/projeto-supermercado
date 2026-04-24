@@ -1,0 +1,63 @@
+<%- include("../layout/header", { title: "Estafeta • Minhas Entregas" }) %>
+
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Minhas entregas</h1>
+        <p class="muted">Acompanha e atualiza o estado.</p>
+      </div>
+      <div class="page-head__actions">
+        <a class="btn btn--ghost" href="/estafeta/dashboard">Voltar</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <% if (vendas.length > 0) { %>
+      <table>
+        <tr>
+          <th>Cliente</th>
+          <th>Supermercado</th>
+          <th>Total</th>
+          <th>Estado</th>
+          <th>Ações</th>
+        </tr>
+
+        <% vendas.forEach(venda => { %>
+          <tr>
+            <td><%= venda.cliente ? venda.cliente.nome : "Sem cliente" %></td>
+            <td><%= venda.supermercado ? venda.supermercado.nome : "Sem supermercado" %></td>
+            <td>€<%= venda.total.toFixed(2) %></td>
+            <td><span class="pill"><%= venda.estadoEntrega %></span></td>
+            <td>
+              <div class="row">
+                <% if (venda.estadoEntrega === "aceite") { %>
+                  <form action="/estafeta/entregas/<%= venda._id %>/estado" method="POST" style="display:inline;">
+                    <input type="hidden" name="estado" value="em_transito">
+                    <button class="btn btn--warning btn--sm" type="submit">Em trânsito</button>
+                  </form>
+                <% } %>
+
+                <% if (venda.estadoEntrega === "em_transito") { %>
+                  <form action="/estafeta/entregas/<%= venda._id %>/estado" method="POST" style="display:inline;">
+                    <input type="hidden" name="estado" value="entregue">
+                    <button class="btn btn--primary btn--sm" type="submit">Entregue</button>
+                  </form>
+                <% } %>
+
+                <% if (venda.estadoEntrega === "entregue") { %>
+                  <span class="muted">Sem ações</span>
+                <% } %>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    <% } else { %>
+      <p class="muted">Não tens entregas ativas.</p>
+    <% } %>
+  </div>
+</div>
+
+<%- include("../layout/footer") %>

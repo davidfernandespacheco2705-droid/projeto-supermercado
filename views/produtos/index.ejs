@@ -1,53 +1,64 @@
-<%- include("../layout/header") %>
+<%- include("../layout/header", { title: "Produtos" }) %>
 
-<h2>Lista de Produtos</h2>
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Produtos</h1>
+        <p class="muted">Pesquisa e consulta produtos.</p>
+      </div>
+      <div class="page-head__actions">
+        <% if (session && session.role === "supermercado") { %>
+          <a class="btn btn--primary" href="/produtos/novo">Novo Produto</a>
+          <a class="btn btn--ghost" href="/supermercado/produtos">Os meus produtos</a>
+        <% } %>
 
-<form method="GET" action="/produtos">
-  <input type="text" name="pesquisa" placeholder="Pesquisar produto..." value="<%= pesquisa || '' %>">
-  <button type="submit">Pesquisar</button>
-</form>
+        <% if (session && (session.role === "admin" || session.role === "cliente")) { %>
+          <a class="btn btn--ghost" href="/comparar">Comparar Preços</a>
+        <% } %>
+      </div>
+    </div>
 
-<a href="/produtos/novo">Novo Produto</a>
+    <form method="GET" action="/produtos">
+      <div>
+        <label for="pesquisa">Pesquisar</label>
+        <input id="pesquisa" type="text" name="pesquisa" placeholder="Pesquisar produto..." value="<%= pesquisa || '' %>">
+      </div>
+      <button type="submit">Pesquisar</button>
+    </form>
+  </div>
 
-<% if (produtos.length > 0) { %>
-  <table>
-    <tr>
-      <th>Nome</th>
-      <th>Descrição</th>
-      <th>Categoria</th>
-      <th>Preço</th>
-      <th>Imagem</th>
-      <th>Stock</th>
-      <th>Supermercado</th>
-      <th>Ações</th>
-    </tr>
+  <div class="card">
+    <% if (produtos.length > 0) { %>
+      <table>
+        <tr>
+          <th>Nome</th>
+          <th>Descrição</th>
+          <th>Categoria</th>
+          <th>Preço</th>
+          <th>Imagem</th>
+          <th>Stock</th>
+          <th>Supermercado</th>
+        </tr>
 
-    <% produtos.forEach(produto => { %>
-      <tr>
-        <td><%= produto.nome %></td>
-        <td><%= produto.descricao %></td>
-        <td><%= produto.categoria ? produto.categoria.nome : "Sem categoria" %></td>
-        <td>€<%= produto.preco %></td>
-        <td>
-          <img src="<%= produto.imagem %>" alt="produto" width="60">
-        </td>
-        <td><%= produto.stock %></td>
-        <td><%= produto.supermercado ? produto.supermercado.nome : "Sem supermercado" %></td>
-        <td>
-          <a href="/produtos/<%= produto._id %>/editar">Editar</a>
-
-          <form action="/produtos/<%= produto._id %>/apagar" method="POST" style="display:inline;">
-            <button type="submit">Apagar</button>
-          </form>
-        </td>
-      </tr>
-    <% }) %>
-  </table>
-<% } else { %>
-  <p>Não existem produtos registados.</p>
-<% } %>
-
-<br>
-<a href="/comparar">Comparar Preços</a>
+        <% produtos.forEach(produto => { %>
+          <tr>
+            <td><%= produto.nome %></td>
+            <td><%= produto.descricao %></td>
+            <td><%= produto.categoria ? produto.categoria.nome : "Sem categoria" %></td>
+            <td>€<%= produto.preco %></td>
+            <td>
+              <img src="<%= produto.imagem %>" alt="produto" width="60">
+            </td>
+            <td><%= produto.stock %></td>
+            <td><%= produto.supermercado ? produto.supermercado.nome : "Sem supermercado" %></td>
+          </tr>
+        <% }) %>
+      </table>
+    <% } else { %>
+      <p class="muted">Não existem produtos registados.</p>
+    <% } %>
+  </div>
+</div>
 
 <%- include("../layout/footer") %>

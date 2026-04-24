@@ -1,27 +1,61 @@
-<%- include("../layout/header") %>
+<%- include("../layout/header", { title: "Produtos • Editar" }) %>
 
-<h2>Editar Produto</h2>
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Editar Produto</h1>
+        <p class="muted"><strong>Supermercado:</strong> <%= supermercado.nome %></p>
+      </div>
+      <div class="page-head__actions">
+        <a class="btn btn--ghost" href="/produtos">Voltar</a>
+      </div>
+    </div>
+  </div>
 
-<form action="/produtos/<%= produto._id %>/editar" method="POST">
-  <input type="text" name="nome" value="<%= produto.nome %>" required>
-  <input type="text" name="descricao" value="<%= produto.descricao %>" required>
+  <div class="card">
+    <form action="/produtos/<%= produto._id %>/editar" method="POST">
+      <div class="stack">
+        <div>
+          <label for="nome">Nome</label>
+          <input id="nome" type="text" name="nome" value="<%= produto.nome %>" required>
+        </div>
 
-  <label>Categoria:</label>
-  <select name="categoria" required>
-    <% categorias.forEach(categoria => { %>
-      <option value="<%= categoria._id %>" <%= produto.categoria && produto.categoria.toString() === categoria._id.toString() ? "selected" : "" %>>
-        <%= categoria.nome %>
-      </option>
-    <% }) %>
-  </select>
+        <div>
+          <label for="descricao">Descrição</label>
+          <input id="descricao" type="text" name="descricao" value="<%= produto.descricao %>" required>
+        </div>
 
-  <input type="number" step="0.01" name="preco" value="<%= produto.preco %>" required>
-  <input type="text" name="imagem" value="<%= produto.imagem %>" required>
-  <input type="number" name="stock" value="<%= produto.stock %>" required>
+        <div>
+          <label for="categoria">Categoria</label>
+          <select id="categoria" name="categoria" required>
+            <% categorias.forEach(categoria => { %>
+              <option value="<%= categoria._id %>" <%= produto.categoria && produto.categoria.toString() === categoria._id.toString() ? "selected" : "" %>>
+                <%= categoria.nome %>
+              </option>
+            <% }) %>
+          </select>
+        </div>
 
-  <p><strong>Supermercado:</strong> <%= supermercado.nome %></p>
+        <div>
+          <label for="preco">Preço</label>
+          <input id="preco" type="number" step="0.01" name="preco" value="<%= produto.preco %>" required>
+        </div>
 
-  <button type="submit">Guardar Alterações</button>
-</form>
+        <div>
+          <label for="imagem">Imagem (URL)</label>
+          <input id="imagem" type="text" name="imagem" value="<%= produto.imagem %>" required>
+        </div>
+
+        <div>
+          <label for="stock">Stock</label>
+          <input id="stock" type="number" name="stock" value="<%= produto.stock %>" required>
+        </div>
+
+        <button type="submit">Guardar Alterações</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <%- include("../layout/footer") %>

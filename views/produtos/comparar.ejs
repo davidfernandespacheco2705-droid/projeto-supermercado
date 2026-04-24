@@ -1,54 +1,65 @@
-<h2>Comparar Preços</h2>
+<%- include("../layout/header", { title: "Comparar Preços" }) %>
 
-<form method="GET" action="/comparar">
-  <input type="text" name="pesquisa" placeholder="Pesquisar produto..." value="<%= pesquisa || '' %>">
-  <button type="submit">Pesquisar</button>
-</form>
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Comparar Preços</h1>
+        <p class="muted">Pesquisa um produto e compara preços por supermercado.</p>
+      </div>
+      <div class="page-head__actions">
+        <a class="btn btn--ghost" href="/dashboard">Voltar</a>
+      </div>
+    </div>
 
-<br>
+    <form method="GET" action="/comparar">
+      <div>
+        <label for="pesquisa">Pesquisar</label>
+        <input id="pesquisa" type="text" name="pesquisa" placeholder="Pesquisar produto..." value="<%= pesquisa || '' %>">
+      </div>
+      <button type="submit">Pesquisar</button>
+    </form>
+  </div>
 
-<a href="/dashboard">
-  <button type="button">Voltar</button>
-</a>
+  <% if (produtos.length > 0) { %>
+    <div class="card">
+      <h2>Resultados</h2>
 
-<hr>
+      <table>
+        <tr>
+          <th>Nome</th>
+          <th>Categoria</th>
+          <th>Preço</th>
+          <th>Supermercado</th>
+          <th>Destaque</th>
+        </tr>
 
-<% if (produtos.length > 0) { %>
-  <h3>Resultados</h3>
-
-  <table>
-    <tr>
-      <th>Nome</th>
-      <th>Categoria</th>
-      <th>Preço</th>
-      <th>Supermercado</th>
-      <th>Destaque</th>
-    </tr>
-
-    <% produtos.forEach((produto, index) => { %>
-      <tr>
-        <td><%= produto.nome %></td>
-        <td><%= produto.categoria ? produto.categoria.nome : "Sem categoria" %></td>
-        <td>€<%= Number(produto.preco).toFixed(2) %></td>
-        <td><%= produto.supermercado ? produto.supermercado.nome : "Sem supermercado" %></td>
-        <td>
-          <% if (index === 0) { %>
-            Mais barato
-          <% } else { %>
-            -
-          <% } %>
-        </td>
-      </tr>
-    <% }) %>
-  </table>
-<% } else if (pesquisa) { %>
-  <p>Não foram encontrados produtos com esse nome.</p>
-
-<% } else { %>
-  <p>Pesquisa um produto para comparar preços entre supermercados.</p>
-<% } %>
-
-<% } %>
+        <% produtos.forEach((produto, index) => { %>
+          <tr>
+            <td><%= produto.nome %></td>
+            <td><%= produto.categoria ? produto.categoria.nome : "Sem categoria" %></td>
+            <td>€<%= Number(produto.preco).toFixed(2) %></td>
+            <td><%= produto.supermercado ? produto.supermercado.nome : "Sem supermercado" %></td>
+            <td>
+              <% if (index === 0) { %>
+                <span class="pill pill--ok">Mais barato</span>
+              <% } else { %>
+                <span class="muted">-</span>
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </table>
+    </div>
+  <% } else if (pesquisa) { %>
+    <div class="card">
+      <p>Não foram encontrados produtos com esse nome.</p>
+    </div>
+  <% } else { %>
+    <div class="card">
+      <p class="muted">Pesquisa um produto para comparar preços entre supermercados.</p>
+    </div>
+  <% } %>
+</div>
 
 <%- include("../layout/footer") %>
-

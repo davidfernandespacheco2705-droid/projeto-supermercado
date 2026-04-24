@@ -1,11 +1,20 @@
-<%- include("layout/header") %>
+<%- include("layout/header", { title: "Backoffice" }) %>
 
-<h1>Backoffice</h1>
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Backoffice</h1>
+        <p class="muted">Atalhos rápidos para gerir a plataforma.</p>
+      </div>
+    </div>
 
-<ul>
-  <li><a href="/produtos">Gerir Produtos</a></li>
-  <li><a href="/supermercados">Gerir Supermercados</a></li>
-  <li><a href="/users/novo">Criar Utilizador</a></li>
-</ul>
+    <div class="row">
+      <a class="btn btn--primary" href="/produtos">Gerir Produtos</a>
+      <a class="btn btn--primary" href="/supermercados">Gerir Supermercados</a>
+      <a class="btn btn--ghost" href="/users/novo">Criar Utilizador</a>
+    </div>
+  </div>
+</div>
 
 <%- include("layout/footer") %>

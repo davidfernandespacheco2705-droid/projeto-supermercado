@@ -8,10 +8,16 @@
         <p class="muted">Acede à plataforma de gestão de vendas e supermercados.</p>
       </div>
 
+      <% if (typeof error !== "undefined" && error) { %>
+        <div class="card" style="border-color: rgba(220, 38, 38, 0.25); background: rgba(254, 242, 242, 0.7);">
+          <strong>Erro:</strong> <%= error %>
+        </div>
+      <% } %>
+
       <form action="/login" method="POST">
         <div>
-          <label for="username">Username</label>
-          <input id="username" type="text" name="username" placeholder="ex: joao.silva" autocomplete="username" required>
+          <label for="username">Username ou Email</label>
+          <input id="username" type="text" name="username" placeholder="ex: joao.silva ou joao@email.com" autocomplete="username" required>
         </div>
 
         <div>

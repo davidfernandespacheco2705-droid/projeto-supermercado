@@ -1,28 +1,59 @@
-<%- include("../layout/header") %>
+<%- include("../layout/header", { title: "Produtos • Novo" }) %>
 
-<h2>Novo Produto</h2>
+<div class="stack">
+  <div class="card card--soft">
+    <div class="page-head">
+      <div class="page-head__title">
+        <h1>Novo Produto</h1>
+        <p class="muted"><strong>Supermercado:</strong> <%= supermercado.nome %></p>
+      </div>
+      <div class="page-head__actions">
+        <a class="btn btn--ghost" href="/produtos">Voltar</a>
+      </div>
+    </div>
+  </div>
 
-<form action="/produtos" method="POST">
-  <input type="text" name="nome" placeholder="Nome do produto" required>
+  <div class="card">
+    <form action="/produtos" method="POST">
+      <div class="stack">
+        <div>
+          <label for="nome">Nome</label>
+          <input id="nome" type="text" name="nome" placeholder="Nome do produto" required>
+        </div>
 
-  <input type="text" name="descricao" placeholder="Descrição" required>
+        <div>
+          <label for="descricao">Descrição</label>
+          <input id="descricao" type="text" name="descricao" placeholder="Descrição" required>
+        </div>
 
-  <label>Categoria:</label>
-  <select name="categoria" required>
-    <% categorias.forEach(categoria => { %>
-      <option value="<%= categoria._id %>"><%= categoria.nome %></option>
-    <% }) %>
-  </select>
+        <div>
+          <label for="categoria">Categoria</label>
+          <select id="categoria" name="categoria" required>
+            <% categorias.forEach(categoria => { %>
+              <option value="<%= categoria._id %>"><%= categoria.nome %></option>
+            <% }) %>
+          </select>
+        </div>
 
-  <input type="number" step="0.01" name="preco" placeholder="Preço" required>
+        <div>
+          <label for="preco">Preço</label>
+          <input id="preco" type="number" step="0.01" name="preco" placeholder="Preço" required>
+        </div>
 
-  <input type="text" name="imagem" placeholder="URL da imagem" required>
+        <div>
+          <label for="imagem">Imagem (URL)</label>
+          <input id="imagem" type="text" name="imagem" placeholder="URL da imagem" required>
+        </div>
 
-  <input type="number" name="stock" placeholder="Stock" required>
+        <div>
+          <label for="stock">Stock</label>
+          <input id="stock" type="number" name="stock" placeholder="Stock" required>
+        </div>
 
-  <p><strong>Supermercado:</strong> <%= supermercado.nome %></p>
-
-  <button type="submit">Guardar Produto</button>
-</form>
+        <button type="submit">Guardar Produto</button>
+      </div>
+    </form>
+  </div>
+</div>
 
 <%- include("../layout/footer") %>
