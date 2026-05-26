@@ -1,0 +1,54 @@
+<section class="hero">
+  <div>
+    <h1>Marketplace de Supermercados</h1>
+    <p>Pesquise produtos, compare e crie encomendas para entrega por estafeta.</p>
+  </div>
+
+  <div class="cart-summary">
+    <strong>Carrinho:</strong>
+    <span>{{ itemsCount }} item(s)</span>
+    <span>Total: €{{ cartTotal.toFixed(2) }}</span>
+    <a routerLink="/checkout" class="btn">Finalizar compra</a>
+  </div>
+</section>
+
+<section class="filters">
+  <div>
+    <label>Pesquisa</label>
+    <input type="text" [(ngModel)]="pesquisa" (input)="pesquisar()" placeholder="Nome do produto" />
+  </div>
+  <div>
+    <label>Categoria</label>
+    <select [(ngModel)]="categoriaId" (change)="pesquisar()">
+      <option value="">Todas</option>
+      <option *ngFor="let categoria of categorias" [value]="categoria._id">{{ categoria.nome }}</option>
+    </select>
+  </div>
+  <div>
+    <label>Supermercado</label>
+    <select [(ngModel)]="supermercadoId" (change)="pesquisar()">
+      <option value="">Todos</option>
+      <option *ngFor="let supermercado of supermercados" [value]="supermercado._id">{{ supermercado.nome }}</option>
+    </select>
+  </div>
+</section>
+
+<p class="message" *ngIf="mensagem">{{ mensagem }}</p>
+
+<section class="product-grid">
+  <article *ngFor="let produto of produtos" class="card">
+    <h2>{{ produto.nome }}</h2>
+    <p>{{ produto.descricao }}</p>
+    <div class="meta">
+      <span><strong>Categoria:</strong> {{ produto.categoria.nome || 'Sem categoria' }}</span>
+      <span><strong>Supermercado:</strong> {{ produto.supermercado.nome }}</span>
+    </div>
+    <div class="meta">
+      <span><strong>Preço:</strong> €{{ produto.preco.toFixed(2) }}</span>
+      <span><strong>Stock:</strong> {{ produto.stock }}</span>
+    </div>
+    <button class="btn btn-primary" [disabled]="produto.stock === 0" (click)="adicionarCarrinho(produto)">
+      {{ produto.stock === 0 ? 'Sem stock' : 'Adicionar ao carrinho' }}
+    </button>
+  </article>
+</section>

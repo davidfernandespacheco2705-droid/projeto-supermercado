@@ -1,0 +1,75 @@
+.checkout {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.card {
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: white;
+  border: 1px solid #e2e8f0;
+}
+
+.field {
+  margin-bottom: 1rem;
+}
+
+label {
+  display: block;
+  margin-bottom: .4rem;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  padding: .9rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+}
+
+.order-summary {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 12px;
+}
+
+.order-summary ul {
+  list-style: none;
+  padding: 0;
+  margin: .5rem 0;
+}
+
+.order-summary li {
+  margin-bottom: .5rem;
+}
+
+.total {
+  font-weight: 700;
+}
+
+.message {
+  margin: 1rem 0;
+  padding: .9rem;
+  border-radius: 10px;
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.message.sucesso {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.btn {
+  padding: .85rem 1.2rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: #2563eb;
+  color: white;
+}
+
+.empty {
+  margin: 1rem 0;
+}

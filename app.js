@@ -2,12 +2,16 @@ const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swagger");
 
 const { MONGO_URI } = require("./config");
 const sessionMiddleware = require("./middleware/session");
 const authGate = require("./middleware/authGate");
 
 const indexRoutes = require("./routes/indexRoutes");
+const apiRoutes = require("./routes/apiRoutes");
 const authRoutes = require("./routes/authRoutes");
 const usersRoutes = require("./routes/usersRoutes");
 const produtosRoutes = require("./routes/produtosRoutes");
@@ -20,7 +24,9 @@ const app = express();
 
 // CONFIGURAÇÃO BASE
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(cookieParser());
+app.use(cors({ origin: "http://localhost:4200" }));
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -29,10 +35,13 @@ app.use(express.static(path.join(__dirname, "assets")));
 // Sessão (JWT -> res.locals.session)
 app.use(sessionMiddleware);
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // Gate global: bloqueia rotas sem login
 app.use(authGate);
 
 // ROTAS
+app.use("/api", apiRoutes);
 app.use(indexRoutes);
 app.use(authRoutes);
 app.use(usersRoutes);

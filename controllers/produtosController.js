@@ -47,7 +47,6 @@ async function novoForm(req, res) {
 async function criar(req, res) {
   try {
     const { nome, descricao, categoria, preco, imagem, stock } = req.body;
-    const imagemFinal = req.file ? `/uploads/produtos/${req.file.filename}` : (imagem || "");
 
     const precoNum = Number(String(preco ?? "").replace(",", "."));
     const stockNum = Number.parseInt(String(stock ?? ""), 10);
@@ -86,7 +85,7 @@ async function criar(req, res) {
       descricao,
       categoria,
       preco: precoNum,
-      imagem: imagemFinal,
+      imagem,
       stock: stockNum,
       supermercado: supermercado._id
     });
@@ -122,7 +121,6 @@ async function editarForm(req, res) {
 
 async function atualizar(req, res) {
   const { nome, descricao, categoria, preco, imagem, stock } = req.body;
-  const imagemFinal = req.file ? `/uploads/produtos/${req.file.filename}` : (imagem || "");
 
   const precoNum = Number(String(preco ?? "").replace(",", "."));
   const stockNum = Number.parseInt(String(stock ?? ""), 10);
@@ -161,7 +159,7 @@ async function atualizar(req, res) {
     descricao,
     categoria,
     preco: precoNum,
-    imagem: imagemFinal,
+    imagem,
     stock: stockNum
   });
 
@@ -219,3 +217,4 @@ module.exports = {
   apagar,
   comparar
 };
+

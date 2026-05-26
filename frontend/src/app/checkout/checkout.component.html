@@ -1,0 +1,38 @@
+<section class="checkout">
+  <div class="card">
+    <h1>Finalizar Encomenda</h1>
+    <p>Complete os dados do cliente e confirme a encomenda para entrega por estafeta.</p>
+
+    <div *ngIf="cart.getItems().length === 0" class="empty">
+      <p>O carrinho está vazio.</p>
+      <a routerLink="/" class="btn">Voltar à pesquisa</a>
+    </div>
+
+    <div *ngIf="cart.getItems().length > 0">
+      <div class="field">
+        <label>Nome do Cliente</label>
+        <input type="text" [(ngModel)]="clienteNome" placeholder="Nome" />
+      </div>
+      <div class="field">
+        <label>Email do Cliente</label>
+        <input type="email" [(ngModel)]="clienteEmail" placeholder="Email" />
+      </div>
+
+      <div class="order-summary">
+        <h2>Resumo da encomenda</h2>
+        <p><strong>Supermercado:</strong> {{ cart.getSupermercadoNome() }}</p>
+        <ul>
+          <li *ngFor="let item of cart.getItems()">
+            {{ item.nome }} x {{ item.quantidade }} = €{{ (item.preco * item.quantidade).toFixed(2) }}
+          </li>
+        </ul>
+        <p class="total">Total: €{{ cart.getTotal().toFixed(2) }}</p>
+      </div>
+
+      <div *ngIf="mensagem" class="message" [class.sucesso]="sucesso">{{ mensagem }}</div>
+      <button class="btn btn-primary" (click)="enviarPedido()" [disabled]="carregando">
+        {{ carregando ? 'A registar...' : 'Registar encomenda' }}
+      </button>
+    </div>
+  </div>
+</section>

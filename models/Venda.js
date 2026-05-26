@@ -33,7 +33,7 @@ const vendaSchema = new mongoose.Schema({
   },
   estadoEntrega: {
     type: String,
-    enum: ["pendente", "aceite", "em_transito", "entregue"],
+    enum: ["pendente", "confirmada", "em_preparacao", "aceite", "em_transito", "entregue", "cancelada"],
     default: null
   },
   estafeta: {

@@ -7,7 +7,7 @@ function authGate(req, res, next) {
     req.path === "/users/novo" ||
     (req.path === "/users" && req.method === "POST");
 
-  if (isPublicRoute) {
+  if (isPublicRoute || req.path.startsWith("/api") || req.path.startsWith("/api-docs")) {
     return next();
   }
 

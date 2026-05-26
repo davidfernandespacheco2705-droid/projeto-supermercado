@@ -1,0 +1,30 @@
+<section class="history">
+  <div class="card">
+    <h1>Histórico de Encomendas</h1>
+    <p>Pesquise suas encomendas pelo email usado no pedido.</p>
+
+    <div class="field">
+      <label>Email</label>
+      <input type="email" [(ngModel)]="email" placeholder="example@cliente.com" />
+    </div>
+
+    <button class="btn btn-primary" (click)="buscar()">Buscar encomendas</button>
+
+    <p class="message" *ngIf="mensagem">{{ mensagem }}</p>
+
+    <div *ngIf="encomendas.length > 0" class="pedidos">
+      <article *ngFor="let pedido of encomendas" class="pedido-card">
+        <h2>Pedido {{ pedido._id }}</h2>
+        <p><strong>Total:</strong> €{{ pedido.total.toFixed(2) }}</p>
+        <p><strong>Estado:</strong> {{ pedido.estadoEntrega }}</p>
+        <p><strong>Supermercado:</strong> {{ pedido.supermercado.nome }}</p>
+        <p><strong>Enviado em:</strong> {{ pedido.createdAt | date:'short' }}</p>
+        <ul>
+          <li *ngFor="let item of pedido.produtos">
+            {{ item.produto.nome }} x {{ item.quantidade }}
+          </li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>

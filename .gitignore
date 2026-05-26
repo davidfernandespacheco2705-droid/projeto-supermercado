@@ -1,0 +1,14 @@
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+
+assets/uploads/*
+!assets/uploads/produtos/
+assets/uploads/produtos/*
+!assets/uploads/produtos/.gitkeep
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store

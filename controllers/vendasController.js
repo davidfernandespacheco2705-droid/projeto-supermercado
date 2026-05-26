@@ -99,12 +99,54 @@ async function criar(req, res) {
     tipoEntrega: isEntrega ? "domicilio" : "loja",
     metodoEntrega: isEntrega ? metodoEntrega : "",
     custoEntrega: isEntrega ? custoEntrega : 0,
-    estadoEntrega: isEntrega ? "pendente" : null,
+    estadoEntrega: isEntrega ? "pendente" : "confirmada",
     cliente: cliente._id,
     supermercado: supermercado._id
   });
 
   await novaVenda.save();
+  return res.redirect("/vendas");
+}
+
+async function cancelar(req, res) {
+  const user = await User.findById(req.user.id);
+  const supermercado = await Supermercado.findOne({ user: user._id, aprovado: true });
+
+  if (!supermercado) {
+    return res.send("Supermercado não encontrado ou não aprovado.");
+  }
+
+  const venda = await Venda.findById(req.params.id);
+
+  if (!venda) {
+    return res.send("Venda não encontrada.");
+  }
+
+  if (String(venda.supermercado) !== String(supermercado._id)) {
+    return res.send("Acesso negado.");
+  }
+
+  const createdAt = new Date(venda.createdAt).getTime();
+  const prazoCancelar = 5 * 60 * 1000;
+  const prazoValido = venda.createdAt && Date.now() - createdAt <= prazoCancelar;
+
+  if (!prazoValido) {
+    return res.send("Não é possível cancelar após 5 minutos.");
+  }
+
+  if (["entregue", "cancelada", "em_transito"].includes(venda.estadoEntrega)) {
+    return res.send("Não é possível cancelar esta venda.");
+  }
+
+  for (const item of venda.produtos) {
+    const produto = await Produto.findById(item.produto);
+    if (produto) {
+      produto.stock = Number(produto.stock || 0) + Number(item.quantidade || 0);
+      await produto.save();
+    }
+  }
+
+  await Venda.findByIdAndUpdate(req.params.id, { estadoEntrega: "cancelada" });
   return res.redirect("/vendas");
 }
 
@@ -126,6 +168,7 @@ async function listar(req, res) {
 module.exports = {
   novaForm,
   criar,
+  cancelar,
   listar
 };
 

@@ -23,6 +23,7 @@
           <th>Total</th>
           <th>Entrega</th>
           <th>Data</th>
+          <th>Ações</th>
         </tr>
 
         <% vendas.forEach(venda => { %>
@@ -49,10 +50,24 @@
                   <span class="pill"><%= venda.estadoEntrega || "pendente" %></span>
                 </div>
               <% } else { %>
-                <span class="muted">Em loja</span>
+                <div class="stack">
+                  <span class="muted">Em loja</span>
+                  <span class="pill"><%= venda.estadoEntrega || "confirmada" %></span>
+                </div>
               <% } %>
             </td>
             <td><%= venda.createdAt ? new Date(venda.createdAt).toLocaleString() : "Sem data" %></td>
+            <td>
+              <% const createdAt = venda.createdAt ? new Date(venda.createdAt).getTime() : 0; %>
+              <% const cancelavel = venda.createdAt && !["entregue", "cancelada", "em_transito"].includes(venda.estadoEntrega) && (Date.now() - createdAt) <= 5 * 60 * 1000; %>
+              <% if (cancelavel) { %>
+                <form action="/vendas/<%= venda._id %>/cancelar" method="POST" style="margin:0;">
+                  <button class="btn btn--danger btn--sm" type="submit">Cancelar</button>
+                </form>
+              <% } else { %>
+                <span class="muted">—</span>
+              <% } %>
+            </td>
           </tr>
         <% }) %>
       </table>

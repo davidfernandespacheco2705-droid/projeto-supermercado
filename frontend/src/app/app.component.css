@@ -1,0 +1,42 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.2rem 1.5rem;
+  background: #1d4ed8;
+  color: white;
+  flex-wrap: wrap;
+}
+
+.app-header .brand h1 {
+  margin: 0;
+  font-size: 1.6rem;
+}
+
+.app-header nav a {
+  color: white;
+  text-decoration: none;
+  margin-right: 1rem;
+}
+
+.app-header nav a:hover {
+  text-decoration: underline;
+}
+
+.app-shell {
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.app-footer {
+  text-align: center;
+  padding: 1rem 0;
+  color: #475569;
+}
